@@ -1,4 +1,10 @@
 
+.flexbox {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
 .App-header {
   text-align: center;
   background-color: #222;
@@ -6,4 +12,13 @@
   padding: 10px;
   padding-top: 30px;
   color: lightgrey;
+  flex: 0 1 auto;
+}
+
+.flexbox .row.content{
+  flex: 1 1 auto;
+}
+
+.App {
+  background-color: #e2e2e2;
 }

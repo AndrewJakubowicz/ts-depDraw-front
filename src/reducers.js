@@ -1,6 +1,7 @@
 import * as actions from './actions';
 
 import {combineReducers} from 'redux';
+import Immutable from "immutable";
 
 
 /**
@@ -15,7 +16,6 @@ const fileTextReducer = (fileData = {file: "DEFAULT", text: "//DEFAULT"}, action
             if (!(action.text || typeof action.text === 'string')){
                 new Error("fileTextReducer action.filePath missing!");
             }
-            console.log("received payload", action)
             return {
                 file: action.filePath,
                 text: action.text
@@ -29,7 +29,35 @@ const fileTextReducer = (fileData = {file: "DEFAULT", text: "//DEFAULT"}, action
  */
 export const getFileText = state => state.currentFile
 
+
+/**
+ * Reducer for keeping track of the file list.
+ */
+const openFileListReducer = (openFileList = Immutable.List([]), action) => {
+    switch(action.type){
+        case actions.ADD_OPEN_FILE_NAME:
+            if (!(action.fileName || typeof action.fileName === 'string')){
+                new Error("fileTextReducer action.filePath missing!");
+            }
+            return openFileList.push(action.fileName);
+
+        case actions.REMOVE_OPEN_FILE_NAME:
+            if (!(action.fileName || typeof action.fileName === 'string')){
+                new Error("fileTextReducer action.filePath missing!");
+            }
+            return openFileList.filter(v => v !== action.fileName);
+        default:
+            return openFileList;
+    }
+}
+
+/**
+ * Returns list of open files.
+ */
+export const getOpenFileList = state => state.openFileList;
+
 // rootReducer is the base of the store.
 export const rootReducer = combineReducers({
-    currentFile: fileTextReducer
+    currentFile: fileTextReducer,
+    openFileList: openFileListReducer
 });

@@ -7,6 +7,8 @@ import * as actions from '../actions';
 var CodeMirror = require("codemirror");
 require('codemirror/mode/javascript/javascript');
 
+import './myCodeMirror.css';
+
 
 
 // Component for CodeMirror
@@ -17,7 +19,6 @@ const CodeMapComponent = React.createClass({
         
     },
     componentWillReceiveProps: function(newProps) {
-        console.log('OI BUDDY');
         if (this.props.fileText === newProps.fileText){
             return undefined;
         }
@@ -38,17 +39,14 @@ const CodeMapComponent = React.createClass({
         this.myCodeMirror.on('cursorActivity', (event) => {this.props.cursorActivity(this.myCodeMirror, event)});
     },
     render: function() {
-        return (<div>
-            <h2>File: {this.props.filePath}</h2>
+        return (<div className="row code-box">
             <div ref={this.receiveRef}></div>
         </div>)
     }
 });
 
 const mapStateToProps = state => {
-    console.log("STATE UPDATING SUCKER!")
     return {
-        filePath: getFileText(state).file,
         fileText: getFileText(state).text
     }
 }

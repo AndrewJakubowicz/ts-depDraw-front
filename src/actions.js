@@ -20,3 +20,20 @@ export const receiveFileText = filePathAndText => ({
     file: filePathAndText.file,
     text: filePathAndText.text
 })
+
+/**
+ * FILE OPEN LIST OPERATIONS
+ */
+
+export const ADD_OPEN_FILE_NAME = "ADD_OPEN_FILE_NAME";
+export const REMOVE_OPEN_FILE_NAME = "REMOVE_OPEN_FILE_NAME";
+
+export const addOpenFileName = fileName => ({
+    type: ADD_OPEN_FILE_NAME,
+    fileName
+});
+
+export const removeOpenFileName = fileName => ({
+    type: removeOpenFileName,
+    fileName
+});

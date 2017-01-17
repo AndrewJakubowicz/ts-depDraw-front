@@ -12,7 +12,9 @@ export const getFileTextEpic = action$ =>
             (action.file
             ? ajax.getJSON(`http://localhost:${PORT}/api/getFileText?filePath=${action.file}`)
             : ajax.getJSON(`http://localhost:${PORT}/api/getFileText`))
-                .map(actions.receiveFileText)
+                .mergeMap(jsonObj =>
+                    Rx.Observable.from([actions.receiveFileText(jsonObj),
+                                        actions.addOpenFileName(jsonObj.file)]))
         )
         .takeUntil(action$.ofType(actions.CANCEL_FETCH_FILE_TEXT))
         .catch(err => {
