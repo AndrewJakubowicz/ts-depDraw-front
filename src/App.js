@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
-
-
+import {CodeDisplayEditor} from './components/myCodeMirror';
 
 
 
@@ -14,7 +13,7 @@ class App extends Component {
           <h2>MVP - ts-depDraw</h2>
         </div>
         <div id="d3-root"></div>
-        <div id="code-box"></div>
+       <CodeDisplayEditor />
       </div>
     );
   }

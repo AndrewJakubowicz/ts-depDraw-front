@@ -3,11 +3,30 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 
-import {createCodeBlock} from './util/myCodeMirror';
 
+// REDUX DEPENDENCIES
+import { Provider } from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import { createEpicMiddleware } from 'redux-observable';
+import createLogger from 'redux-logger';
+
+import * as actions from './actions';
+import {rootReducer} from './reducers';
+import {rootEpic} from './epics';
+
+const epicMiddleWare = createEpicMiddleware(rootEpic);
+const logger = createLogger();
+let store = createStore(rootReducer,
+            applyMiddleware(epicMiddleWare, logger));
+window.store = store;
 ReactDOM.render(
-  <App />,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 );
 
-createCodeBlock('crap.ts');
+// Init stuff
+setTimeout(_ => {
+  store.dispatch(actions.fetchFileText());
+}, 1);
