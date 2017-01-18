@@ -7,39 +7,36 @@ import Immutable from "immutable";
 /**
  * Reducer for receiving file text data.
  */
-const fileTextReducer = (fileData = {file: "DEFAULT", text: "//DEFAULT"}, action) => {
+const fileTextReducer = (fileText = "//", action) => {
     switch(action.type){
-        case actions.RECEIVE_FILE_TEXT:
-            if (!(action.filePath || typeof action.filePath === 'string')){
-                new Error("fileTextReducer action.filePath missing!");
-            }
+        case actions.UPDATE_CODEMIRROR_TEXT:
             if (!(action.text || typeof action.text === 'string')){
                 new Error("fileTextReducer action.filePath missing!");
             }
-            return {
-                file: action.filePath,
-                text: action.text
-            }
+            return action.text
+
         default:
-            return fileData;
+            return fileText;
     }
 }
 /**
  * Returns currentFile object with file and text properties.
  */
-export const getFileText = state => state.currentFile
+export const getFileText = state => state.openFileText
 
 
 /**
  * Reducer for keeping track of the file list.
  */
-const openFileListRecord = Immutable.Record({ fileName: "default", openInEditor: true });
+const openFileListRecord = Immutable.Record({ fileName: "default", openInEditor: false });
 const openFileListReducer = (openFileList = Immutable.List([]), action) => {
     switch(action.type){
         case actions.ADD_OPEN_FILE_NAME:
             if (!(action.fileName || typeof action.fileName === 'string')){
                 new Error("fileTextReducer action.filePath missing!");
             }
+            // Set all fileNames to openInEditor to false.
+            openFileList = openFileList.map(({fileName}) => new openFileListRecord({fileName}));
             return openFileList.push(new openFileListRecord({fileName: action.fileName, openInEditor: true}));
 
         case actions.REMOVE_OPEN_FILE_NAME:
@@ -47,6 +44,13 @@ const openFileListReducer = (openFileList = Immutable.List([]), action) => {
                 new Error("fileTextReducer action.filePath missing!");
             }
             return openFileList.filter(v => v.fileName !== action.fileName);
+        
+        case actions.CHANGE_OPEN_FILE_TAB:
+            if (!(action.fileName || typeof action.fileName === 'string')){
+                new Error("fileTextReducer action.filePath missing!");
+            }
+            return openFileList.map(({fileName}) => new openFileListRecord({fileName, openInEditor: fileName === action.fileName}));
+        
         default:
             return openFileList;
     }
@@ -61,6 +65,6 @@ export const getOpenFileList = state => state.openFileList;
 
 // rootReducer is the base of the store.
 export const rootReducer = combineReducers({
-    currentFile: fileTextReducer,
+    openFileText: fileTextReducer,
     openFileList: openFileListReducer
 });

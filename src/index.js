@@ -30,3 +30,8 @@ ReactDOM.render(
 setTimeout(_ => {
   store.dispatch(actions.fetchFileText());
 }, 1);
+
+
+setTimeout(_ => {
+  store.dispatch(actions.fetchFileText('examples/ex3.ts'));
+}, 1);

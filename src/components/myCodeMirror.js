@@ -47,7 +47,7 @@ const CodeMapComponent = React.createClass({
 
 const mapStateToProps = state => {
     return {
-        fileText: getFileText(state).text
+        fileText: getFileText(state)
     }
 }
 
