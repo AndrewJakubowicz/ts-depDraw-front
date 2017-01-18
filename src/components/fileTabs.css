@@ -3,7 +3,9 @@ ul.fileTabs {
     list-style-type: none;
     margin: 0;
     padding: 10px 0 10px 0;
+    white-space: nowrap;
     overflow-x: auto;
+
 }
 
 ul.fileTabs li {
@@ -14,4 +16,10 @@ ul.fileTabs li {
 
 ul.fileTabs li.selected {
     background-color: #bfbfbf;
+}
+
+ul.fileTabs li sup {
+    background-color: #d2d2d2;
+    padding: 0 3px 0 3px;
+    display: inline-block;
 }

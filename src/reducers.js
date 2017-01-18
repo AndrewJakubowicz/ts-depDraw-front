@@ -50,6 +50,9 @@ const openFileListReducer = (openFileList = Immutable.List([]), action) => {
                 new Error("fileTextReducer action.filePath missing!");
             }
             return openFileList.map(({fileName}) => new openFileListRecord({fileName, openInEditor: fileName === action.fileName}));
+
+        case actions.CHANGE_TO_LAST_FILE_TAB:
+            return openFileList.butLast().concat(openFileList.takeLast(1).map(({fileName, openInEditor}) => ({fileName, openInEditor: true})));
         
         default:
             return openFileList;

@@ -10,8 +10,8 @@ const OpenFileTabsComponent = React.createClass({
     render: function(){
         return <ul className="fileTabs">
             {this.props.openFilesList.map(({fileName, openInEditor}) => 
-                    <li key={fileName} onClick={() => {this.props.clickFileTab(fileName, openInEditor)}}
-                    className={openInEditor ? "selected" : ""}>{fileName}</li>
+                    <li key={fileName + '-li'} onClick={() => {this.props.clickFileTab(fileName, openInEditor)}}
+                    className={openInEditor ? "selected" : ""}>{fileName} <sup key={fileName + '-sup'} onClick={(event)=>{this.props.closeFileTab(event, fileName, openInEditor, this.props.openFilesList)}}>x</sup></li>
                 )}
         </ul>
     }
@@ -31,13 +31,32 @@ const clickTabLogic = (fileName, openInEditor, dispatch) => {
     }
 }
 
+const closeTabLogic = (event, fileName, openInEditor, fileList, dispatch) => {
+    dispatch(actions.removeOpenFileName(fileName));
+    event.stopPropagation();
+    if (!openInEditor){
+        return null
+    }
+    // We need to open a different code window.
+    dispatch(actions.changeToLastFileTab());
+
+    const file = fileList.filter(v => v.fileName !== fileName).last();
+    if (file){
+        dispatch(actions.getTextForOpenFile(file.fileName));
+    } else {
+        dispatch(actions.fetchFileText())
+    }
+    
+}
+
 
 const mapStateToProps = state => ({
     openFilesList: getOpenFileList(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-    clickFileTab: (fileName, openInEditor) => clickTabLogic(fileName, openInEditor, dispatch)
+    clickFileTab: (fileName, openInEditor) => clickTabLogic(fileName, openInEditor, dispatch),
+    closeFileTab: (event, fileName, openInEditor, fileList) => closeTabLogic(event, fileName, openInEditor, fileList, dispatch)
 });
 
 export const OpenFileTabs = connect(

@@ -26,7 +26,8 @@ export const fetchFileText = filePath => ({
 export const ADD_OPEN_FILE_NAME = "ADD_OPEN_FILE_NAME";
 export const REMOVE_OPEN_FILE_NAME = "REMOVE_OPEN_FILE_NAME";
 export const CHANGE_OPEN_FILE_TAB = "CHANGE_OPEN_FILE_TAB";
-export const GET_TEXT_FOR_OPEN_FILE = "GET_TEXT_FOR_OPEN_FILE"
+export const GET_TEXT_FOR_OPEN_FILE = "GET_TEXT_FOR_OPEN_FILE";
+export const CHANGE_TO_LAST_FILE_TAB = "CHANGE_TO_LAST_FILE_TAB";
 
 export const addOpenFileName = fileName => ({
     type: ADD_OPEN_FILE_NAME,
@@ -47,6 +48,11 @@ export const getTextForOpenFile = fileName => ({
     type: GET_TEXT_FOR_OPEN_FILE,
     fileName
 });
+
+export const changeToLastFileTab = () => ({
+    type: CHANGE_TO_LAST_FILE_TAB
+});
+
 
 /**
  * CODEMIRROR ACTIONS
