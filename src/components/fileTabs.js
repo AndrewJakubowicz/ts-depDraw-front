@@ -10,7 +10,7 @@ const OpenFileTabsComponent = React.createClass({
     render: function(){
         return <ul className="fileTabs">
             {this.props.openFilesList.map(({fileName, openInEditor}) => 
-                    <li key={fileName} onClick={() => {this.props.clickFileTab(fileName)}}
+                    <li key={fileName} onClick={() => {this.props.clickFileTab(fileName, openInEditor)}}
                     className={openInEditor ? "selected" : ""}>{fileName}</li>
                 )}
         </ul>
@@ -24,9 +24,11 @@ const OpenFileTabsComponent = React.createClass({
  *  This handles updating the editor.
  *  This also handles updating the tabs.
  */
-const clickTabLogic = (fileName, dispatch) => {
-    dispatch(actions.changeOpenFileTab(fileName));
-    dispatch(actions.getTextForOpenFile(fileName));
+const clickTabLogic = (fileName, openInEditor, dispatch) => {
+    if (!openInEditor){
+        dispatch(actions.changeOpenFileTab(fileName));
+        dispatch(actions.getTextForOpenFile(fileName));
+    }
 }
 
 
@@ -35,7 +37,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    clickFileTab: fileName => clickTabLogic(fileName, dispatch)
+    clickFileTab: (fileName, openInEditor) => clickTabLogic(fileName, openInEditor, dispatch)
 });
 
 export const OpenFileTabs = connect(

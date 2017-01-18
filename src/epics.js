@@ -21,11 +21,18 @@ export const getFileTextEpic = action$ =>
             return Rx.Observable.empty();
         });
 
+// For getting text for files that are already open.
 export const getOpenFileText = action$ =>
     action$.ofType(actions.GET_TEXT_FOR_OPEN_FILE)
+        .throttleTime(200)
         .mergeMap(action => 
             ajax.getJSON(`http://localhost:${PORT}/api/getFileText?filePath=${action.fileName}`)
-                .map(jsonObj => actions.updateCodeMirrorText(jsonObj.text)))
+                .mergeMap(jsonObj => Rx.Observable.from([actions.updateCodeMirrorText(jsonObj.text),
+                                                        actions.changeOpenFileTab(jsonObj.file)])))
+        .catch(err => {
+            console.error(`Error in getOpenFileText:`, err);
+            return Rx.Observable.empty();
+        });
 
 
 export const rootEpic = combineEpics(
