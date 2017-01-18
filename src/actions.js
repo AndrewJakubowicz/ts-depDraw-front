@@ -27,6 +27,7 @@ export const receiveFileText = filePathAndText => ({
 
 export const ADD_OPEN_FILE_NAME = "ADD_OPEN_FILE_NAME";
 export const REMOVE_OPEN_FILE_NAME = "REMOVE_OPEN_FILE_NAME";
+export const CHANGE_OPEN_FILE_TAB = "CHANGE_OPEN_FILE_TAB";
 
 export const addOpenFileName = fileName => ({
     type: ADD_OPEN_FILE_NAME,
@@ -34,6 +35,12 @@ export const addOpenFileName = fileName => ({
 });
 
 export const removeOpenFileName = fileName => ({
-    type: removeOpenFileName,
+    type: REMOVE_OPEN_FILE_NAME,
     fileName
 });
+
+export const changeOpenFileTab = fileName => ({
+    type: CHANGE_OPEN_FILE_TAB,
+    fileName
+})
+

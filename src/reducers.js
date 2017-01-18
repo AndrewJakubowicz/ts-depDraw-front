@@ -33,19 +33,20 @@ export const getFileText = state => state.currentFile
 /**
  * Reducer for keeping track of the file list.
  */
+const openFileListRecord = Immutable.Record({ fileName: "default", openInEditor: true });
 const openFileListReducer = (openFileList = Immutable.List([]), action) => {
     switch(action.type){
         case actions.ADD_OPEN_FILE_NAME:
             if (!(action.fileName || typeof action.fileName === 'string')){
                 new Error("fileTextReducer action.filePath missing!");
             }
-            return openFileList.push(action.fileName);
+            return openFileList.push(new openFileListRecord({fileName: action.fileName, openInEditor: true}));
 
         case actions.REMOVE_OPEN_FILE_NAME:
             if (!(action.fileName || typeof action.fileName === 'string')){
                 new Error("fileTextReducer action.filePath missing!");
             }
-            return openFileList.filter(v => v !== action.fileName);
+            return openFileList.filter(v => v.fileName !== action.fileName);
         default:
             return openFileList;
     }
@@ -53,6 +54,8 @@ const openFileListReducer = (openFileList = Immutable.List([]), action) => {
 
 /**
  * Returns list of open files.
+ * 
+ * They have the keys: fileName and openInEditor
  */
 export const getOpenFileList = state => state.openFileList;
 
