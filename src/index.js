@@ -34,4 +34,13 @@ setTimeout(_ => {
 
 setTimeout(_ => {
   store.dispatch(actions.fetchFileText('examples/ex3.ts'));
-}, 1);
+}, 2);
+setTimeout(_ => {
+  store.dispatch(actions.fetchFileText('examples/ex1.ts'));
+}, 3);
+setTimeout(_ => {
+  store.dispatch(actions.fetchFileText('examples/ex2.ts'));
+}, 4);
+setTimeout(_ => {
+  store.dispatch(actions.fetchFileText('examples/ex4.ts'));
+}, 5);

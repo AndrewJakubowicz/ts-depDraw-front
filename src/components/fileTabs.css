@@ -1,4 +1,16 @@
 
+ul.fileTabs {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 0 10px 0;
+    overflow-x: auto;
+}
+
+ul.fileTabs li {
+    display: inline;
+    padding: 10px 20px;
+}
+
 ul.fileTabs li.selected {
-    color: red;
+    background-color: #bfbfbf;
 }
