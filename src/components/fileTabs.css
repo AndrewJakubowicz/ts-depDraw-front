@@ -9,6 +9,7 @@ ul.fileTabs {
 ul.fileTabs li {
     display: inline;
     padding: 10px 20px;
+    cursor: pointer;
 }
 
 ul.fileTabs li.selected {
