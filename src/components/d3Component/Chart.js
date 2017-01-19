@@ -1,6 +1,5 @@
 import {d3Chart} from './d3Component';
 import React from 'react';
-import ReactDOM from 'react-dom'
 
 export var Chart = React.createClass({
     propTypes: {
