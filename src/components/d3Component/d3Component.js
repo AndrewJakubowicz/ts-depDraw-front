@@ -75,17 +75,4 @@ D3Chart._drawGraph = function(el, cola){
 
 };
 
-
-function processNodes(passedInGraph){
-    console.log("process Nodes")
-    let links = [];
-    Object.keys(passedInGraph.links).forEach(e => {
-        var l = passedInGraph.links[e];
-        var u = passedInGraph.nodes[l.source], v = passedInGraph.nodes[l.target];
-        links.push({source: u, target: v});
-    });
-    console.log("response", {nodes: passedInGraph.nodes, links})
-    return {nodes: passedInGraph.nodes, links}
-}
-
 export const d3Chart = D3Chart;
