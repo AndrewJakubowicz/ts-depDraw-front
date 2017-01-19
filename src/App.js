@@ -10,9 +10,6 @@ class App extends Component {
   render() {
     return (
       <div className="App flexbox">
-        <div className="App-header">
-          <h2>MVP - ts-depDraw</h2>
-        </div>
         <div className="row content"></div>
        <OpenFileTabs />
        <CodeDisplayEditor />

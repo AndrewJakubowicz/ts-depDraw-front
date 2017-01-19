@@ -1,6 +1,6 @@
 let d3 = require('d3');
 
-module.exports = ()=> {
+module.exports = (()=> {
     const width = 1000,
           height = 400,
           color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -48,22 +48,43 @@ return {
         simulation.alpha(1).restart();
     },
     ticked: ticked,
+    /**
+     * Use an external hash map. Push the node object in here, but you'll
+     * need a hash to remove the node.
+     */
     pushNode: function(node) {
+        // TODO: remove this safety
+        if (node.length > 2){
+            return
+        }
         nodes.push(node);
         this.restart();
     },
+    /**
+     * It is recommended to use an external hash map to keep track of the objects.
+     * Pass them in here, and use the hash to remove them.
+     */
     pushLink: function(link){
         links.push(link);
         this.restart();
     },
-    popNode: function(){
+    /**
+     * links are traversed and all links with the given node hash are destroyed.
+     * Try to only use removeNode.
+     */
+    removeLink: function(nodeHash){
+        links.pop();
+        this.restart();
+    },
+    /**
+     * Pass in the hash code of the node, and it'll splice the correct one based on
+     * the hashing function.
+     */
+    removeNode: function(nodeHash){
         nodes.pop();
         this.restart();
     },
-    popLink: function(){
-        links.pop();
-        this.restart();
-    }
+
 
 }
-}
+})()

@@ -64,3 +64,15 @@ export const updateCodeMirrorText = text => ({
     type: UPDATE_CODEMIRROR_TEXT,
     text
 });
+
+
+/**
+ * Actions for mutating the d3 graph
+ */
+
+export const ADD_NODE = "ADD_NODE";
+
+export const addNode = node => ({
+    type: ADD_NODE,
+    node
+});

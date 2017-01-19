@@ -14,8 +14,8 @@ import * as actions from './actions';
 import {rootReducer} from './reducers';
 import {rootEpic} from './epics';
 
-// D3
-var d3Graph = require('./components/d3Graph')();
+// // D3
+// var d3Graph = require('./components/d3Graph')();
 
 const epicMiddleWare = createEpicMiddleware(rootEpic);
 const logger = createLogger();
@@ -51,19 +51,13 @@ setTimeout(_ => {
 
 
 /**DATA FOR DEFAULT NODES */
-const node1 = {index: 0, x: 400, y:50, width: 50, height: 50};
-const node2 = {index: 1, x: 300, y:40, width: 40, height: 40};
-const node3 = {index: 2, x: 200, y:20, width: 40, height: 40};
+let exampleNodes = [{index: 0, x: 400, y:50, width: 50, height: 50},
+{index: 1, x: 300, y:40, width: 40, height: 40},
+{index: 2, x: 200, y:20, width: 40, height: 40}];
+
+exampleNodes.forEach(node => store.dispatch(actions.addNode(node)))
 
 
-d3Graph.restart();
-
-var a = {id: "a"},
-    b = {id: "b"},
-    c = {id: "c"},
-    temp = [a,b,c];
-temp.forEach(v => d3Graph.pushNode(v));
-setTimeout(d3Graph.pushLink({source: a, target: c}), 200);
 
 
 

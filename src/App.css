@@ -5,16 +5,6 @@
   height: 100%;
 }
 
-.App-header {
-  text-align: center;
-  background-color: #222;
-  height: 70px;
-  padding: 10px;
-  padding-top: 30px;
-  color: lightgrey;
-  flex: 0 1 auto;
-}
-
 .flexbox .row.content{
   flex: 1 1 auto;
 }
