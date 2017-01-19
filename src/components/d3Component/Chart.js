@@ -1,15 +1,19 @@
 import {d3Chart} from './d3Component';
 import React from 'react';
+import {connect} from 'react-redux';
+import {getGraphData} from '../../reducers';
 
-export var Chart = React.createClass({
+
+// requires props.width, props.height, props.data
+var Chart = React.createClass({
     propTypes: {
-        data: React.PropTypes.array
+        data: React.PropTypes.object
     },
 
     componentDidMount: function(){
         d3Chart.create(this.el, {
-            width: '100%',
-            height: '100%'
+            width: this.props.width,
+            height: this.props.height
         }, this.getChartState());
     },
 
@@ -37,3 +41,18 @@ export var Chart = React.createClass({
         );
     }
 });
+
+const mapStateToProps = state => ({
+    data: getGraphData(state),
+    width: '100%',
+    height: '500px'
+});
+
+const mapDispatchToProps = dispatch => ({
+
+});
+
+export const Graph = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Chart);

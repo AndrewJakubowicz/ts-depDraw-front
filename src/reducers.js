@@ -66,8 +66,25 @@ const openFileListReducer = (openFileList = Immutable.List([]), action) => {
  */
 export const getOpenFileList = state => state.openFileList;
 
+
+/**
+ * D3 node data reducer
+ */
+const graphDataReducer = (graphData = {nodes: [{index: 0, x: 400, y:50, width: 50, height: 50},
+                                               {index: 1, x: 300, y:40, width: 40, height: 40}],
+                                       links: []},
+                          action) => {
+    switch(action.type){
+        default:
+            return graphData
+    }
+}
+
+export const getGraphData = state => state.graphData;
+
 // rootReducer is the base of the store.
 export const rootReducer = combineReducers({
     openFileText: fileTextReducer,
-    openFileList: openFileListReducer
+    openFileList: openFileListReducer,
+    graphData: graphDataReducer
 });

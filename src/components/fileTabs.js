@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import React from 'react'
+import React from 'react';
 
 import {getOpenFileList} from '../reducers';
 import * as actions from '../actions';

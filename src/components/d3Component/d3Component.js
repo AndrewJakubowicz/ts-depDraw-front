@@ -5,10 +5,21 @@
  */
 var d3 = require('d3');
 // Hack to get to cola from global window.
-var cola = window.cola;
+var webcola = window.cola;
+var cola = webcola.d3adaptor(d3);
 var D3Chart = {};
 
+
+/**
+ * Requires props.width, props.height, state.data
+ */
+
 D3Chart.create = function(el, props, state) {
+    cola.linkDistance(100)
+        .avoidOverlaps(true)
+        .handleDisconnected(false)
+        .size([props.width, props.height]);
+
     var svg = d3.select(el).append('svg')
         .attr('class', 'd3')
         .attr('width', props.width)
@@ -29,19 +40,20 @@ D3Chart.destroy = function(el, state) {
 
 };
 
-D3Chart._drawGraph = function(el, data){
+D3Chart._drawGraph = function(el, graph){
+    console.log(graph);
     var g = d3.select(el).selectAll('.d3-nodes');
 
-    var point = g.selectAll('.data-node')
-        .data(data, d => d.id);
+    var node = g.selectAll('.data-node')
+        .data(graph.nodes, d => d.index);
 
-    point.enter().append('circle')
+    node.enter().append('circle')
         .attr('class', 'data-node')
         .attr('cx', d => d.x)
         .attr('cy', d => d.y)
-        .attr('r', d => d.z);
+        .attr('r', '20');
 
-    point.exit().remove();
+    node.exit().remove();
 };
 
 export const d3Chart = D3Chart;

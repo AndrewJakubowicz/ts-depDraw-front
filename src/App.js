@@ -5,7 +5,7 @@ import {CodeDisplayEditor} from './components/myCodeMirror';
 import {OpenFileTabs} from './components/fileTabs';
 
 // D3 stuff
-import {Chart} from './components/d3Component/Chart';
+import {Graph} from './components/d3Component/Chart';
 
 
 class App extends Component {
@@ -16,7 +16,7 @@ class App extends Component {
           <h2>MVP - ts-depDraw</h2>
         </div>
         <div className="row content">
-          <Chart />
+          <Graph />
         </div>
        <OpenFileTabs />
        <CodeDisplayEditor />
