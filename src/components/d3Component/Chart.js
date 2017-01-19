@@ -13,7 +13,8 @@ var Chart = React.createClass({
     componentDidMount: function(){
         d3Chart.create(this.el, {
             width: this.props.width,
-            height: this.props.height
+            height: this.props.height,
+            data: this.props.data
         }, this.getChartState());
     },
 

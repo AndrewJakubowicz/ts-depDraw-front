@@ -18,7 +18,9 @@ D3Chart.create = function(el, props, state) {
     cola.linkDistance(100)
         .avoidOverlaps(true)
         .handleDisconnected(false)
-        .size([props.width, props.height]);
+        .size([props.width, props.height])
+        .nodes(props.data.nodes)
+        .links(props.data.links);
 
     var svg = d3.select(el).append('svg')
         .attr('class', 'd3')
@@ -40,15 +42,13 @@ D3Chart.destroy = function(el, state) {
 
 };
 
-D3Chart._drawGraph = function(el, graph){
-    cola.nodes(graph.nodes)
-        .links(graph.links)
-        .start();
-    console.log(graph);
+D3Chart._drawGraph = function(el){
+    cola.start();
+
     var g = d3.select(el).selectAll('.d3-graph');
 
     var nodeSelection = g.selectAll('.data-node')
-        .data(graph.nodes, d => d.index);
+        .data(cola.nodes(), d => d.index);
 
     var node = nodeSelection.enter().append('circle')
         .attr('class', 'data-node')
@@ -60,7 +60,7 @@ D3Chart._drawGraph = function(el, graph){
     nodeSelection.exit().remove();
 
     var linkSelection = g.selectAll(('.data-link'))
-        .data(graph.links, d => String(d.source.index) + String(d.target.index))
+        .data(cola.links(), d => String(d.source.index) + String(d.target.index))
 
     var link = linkSelection.enter().append('line')
         .attr("class", "data-link")
