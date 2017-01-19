@@ -26,7 +26,7 @@ D3Chart.create = function(el, props, state) {
         .attr('height', props.height);
     
     svg.append('g')
-        .attr('class', 'd3-nodes');
+        .attr('class', 'd3-graph');
 
     this.update(el, state);
 };
@@ -41,19 +41,40 @@ D3Chart.destroy = function(el, state) {
 };
 
 D3Chart._drawGraph = function(el, graph){
+    cola.nodes(graph.nodes)
+        .links(graph.links)
+        .start();
     console.log(graph);
-    var g = d3.select(el).selectAll('.d3-nodes');
+    var g = d3.select(el).selectAll('.d3-graph');
 
-    var node = g.selectAll('.data-node')
+    var nodeSelection = g.selectAll('.data-node')
         .data(graph.nodes, d => d.index);
 
-    node.enter().append('circle')
+    var node = nodeSelection.enter().append('circle')
         .attr('class', 'data-node')
         .attr('cx', d => d.x)
         .attr('cy', d => d.y)
-        .attr('r', '20');
+        .attr('r', '20')
+        .call(cola.drag);
 
-    node.exit().remove();
+    nodeSelection.exit().remove();
+
+    var linkSelection = g.selectAll(('.data-link'))
+        .data(graph.links, d => String(d.source.index) + String(d.target.index))
+
+    var link = linkSelection.enter().append('line')
+        .attr("class", "data-link")
+
+    cola.on("tick", function (){
+        link.attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+
+        node.attr("cx", d => d.x)
+            .attr("cy", d => d.y);
+    });
+
 };
 
 export const d3Chart = D3Chart;
