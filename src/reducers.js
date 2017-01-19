@@ -71,6 +71,7 @@ export const getOpenFileList = state => state.openFileList;
 /**DATA FOR DEFAULT NODES */
 const node1 = {index: 0, x: 400, y:50, width: 50, height: 50};
 const node2 = {index: 1, x: 300, y:40, width: 40, height: 40};
+const node3 = {index: 2, x: 200, y:20, width: 40, height: 40};
 
 
 /**
@@ -96,6 +97,9 @@ const graphDataReducer = (graphData = false, action) => {
     switch(action.type){
         case actions.UPDATE_GRAPH_DATA:
             return action.graph;
+        case actions.ADD_GRAPH_NODE:
+            graphData.getNodes().push(node3);
+            return graphData;
         default:
             return graphData;
     }

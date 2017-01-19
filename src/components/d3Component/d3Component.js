@@ -13,7 +13,6 @@ var D3Chart = {};
 
 D3Chart.create = function(el, props, state) {
     
-
     var svg = d3.select(el).append('svg')
         .attr('class', 'd3')
         .attr('width', props.width)
@@ -37,12 +36,12 @@ D3Chart.destroy = function(el, state) {
 };
 
 D3Chart._drawGraph = function(el, cola){
+    console.log('update');
 
     var g = d3.select(el).selectAll('.d3-graph');
 
     var nodeSelection = g.selectAll('.data-node')
-        .data(cola.nodes(), d => d.index)
-        .each(d => {console.log(d)});
+        .data(cola.nodes(), d => d.index);
 
     var node = nodeSelection.enter().append('circle')
         .attr('class', 'data-node')

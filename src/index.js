@@ -44,3 +44,8 @@ setTimeout(_ => {
 setTimeout(_ => {
   store.dispatch(actions.fetchFileText('examples/ex4.ts'));
 }, 5);
+
+
+setTimeout(_ => {
+  store.dispatch(actions.addGraphNode({}));
+}, 5000);

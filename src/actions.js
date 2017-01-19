@@ -77,5 +77,6 @@ export const updateGraphData = graph => ({
 });
 
 export const addGraphNode = node => {
-    
+    type: ADD_GRAPH_NODE,
+    node
 }
