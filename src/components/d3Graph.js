@@ -1,77 +1,69 @@
 let d3 = require('d3');
 
-module.exports = (json) => {
-    let myObj = {};
+module.exports = ()=> {
+    const width = 1000,
+          height = 400,
+          color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    const width = '100%',
-        height = '400px',
-        margin = {top: 40, right: 20, left: 20, bottom: 40};
-
-    let graphData;
-
-    var webcola;
+var svg = d3.select("#graph").append("svg")
+            .attr("width", width)
+            .attr("height",height);
 
 
-    let svg = d3.select('#graph').append('svg')
-                .attr('width', width)
-                .attr('height', height);
+var nodes = [],
+    links = [];
 
-    
-    function updateVisuals(){
-        console.log("UPDATE!")
-        // Links
-        let link = svg.selectAll("line.link")
-            .data(webcola.links())
-        let newLink = link.enter().insert('line', 'rect.node')
-                .attr("class", "link")
-                .attr("stroke", 'black')
-                .attr("stroke-width", 2);
-        link.exit().remove();
+var simulation = d3.forceSimulation(nodes)
+    .force("charge", d3.forceManyBody().strength(-1000))
+    .force("link", d3.forceLink(links).distance(200))
+    .force("x", d3.forceX())
+    .force("y", d3.forceY())
+    .alphaTarget(1)
+    .on("tick", ticked);
 
+var g = svg.append("g").attr("transform", `translate(${width / 2},${height/2})`),
+    link = g.append("g").attr("stroke", "#bbb").attr("stroke-width", 1.5).selectAll(".link"),
+    node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
 
-        let pad = 3;
-        let node = svg.selectAll('rect.node')
-            .data(webcola.nodes(), d => d.name )
-        
-        let nodeEnter = node.enter().append('rect')
-                .attr('class', 'node')
-                .attr('width', 40)  // TODO make based on data
-                .attr('height', 40) // TODO make based on data
-                .attr('fill', 'red')
-                .call(webcola.drag);
+function ticked() {
+        node.attr("cx", d => d.x)
+            .attr("cy", d => d.y);
+        link.attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+}
+
+return {
+    restart: function() {
+        node = node.data(nodes, d => d.id);
         node.exit().remove();
-        
-        
-        webcola.on('tick', function(){
-            newLink.attr("x1", function (d) { return d.source.x; })
-                .attr("y1", function (d) { return d.source.y; })
-                .attr("x2", function (d) { return d.target.x; })
-                .attr("y2", function (d) { return d.target.y; });
+        link = link.data(links, d => d.source.id + '-' + d.target.id);
+        link.exit().remove();
+        node = node.enter().append("circle").attr("fill", d => color(d.id)).attr("r", 8).merge(node);
+        link = link.enter().append("line").merge(link);
 
-            nodeEnter.attr("x", function (d) { return d.x - d.width / 2 + pad; })
-                .attr("y", function (d) { return d.y - d.height / 2 + pad; });
-            
-        });
-
-        // This adds metaData to the Layout
-        webcola.start();
+        simulation.nodes(nodes);
+        simulation.force("link").links(links);
+        simulation.alpha(1).restart();
+    },
+    ticked: ticked,
+    pushNode: function(node) {
+        nodes.push(node);
+        this.restart();
+    },
+    pushLink: function(link){
+        links.push(link);
+        this.restart();
+    },
+    popNode: function(){
+        nodes.pop();
+        this.restart();
+    },
+    popLink: function(){
+        links.pop();
+        this.restart();
     }
 
-    (function init (){
-        graphData = json;
-        console.log('nodes-init', graphData.nodes);
-        console.log('links-init', graphData.links);
-        webcola = window.cola.d3adaptor(d3)
-                .linkDistance(120)
-                .avoidOverlaps(true)
-                .handleDisconnected(false)
-                .size([width, height])
-                .nodes(graphData.nodes)
-                .links(graphData.links)
-                .start();
-        updateVisuals();
-    })()
-    myObj.graphData = graphData;
-    myObj.update = updateVisuals;
-    return myObj
+}
 }
