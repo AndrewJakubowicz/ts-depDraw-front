@@ -67,16 +67,37 @@ const openFileListReducer = (openFileList = Immutable.List([]), action) => {
 export const getOpenFileList = state => state.openFileList;
 
 
+
+/**DATA FOR DEFAULT NODES */
+const node1 = {index: 0, x: 400, y:50, width: 50, height: 50};
+const node2 = {index: 1, x: 300, y:40, width: 40, height: 40};
+
+
 /**
  * D3 node data reducer
  */
-const graphDataReducer = (graphData = {nodes: [{index: 0, x: 400, y:50, width: 50, height: 50},
-                                               {index: 1, x: 300, y:40, width: 40, height: 40}],
-                                       links: []},
-                          action) => {
+// Hack to get to cola from global window.
+var d3 = require('d3');
+
+
+const graphDataReducer = (graphData = false, action) => {
+    if (!graphData){
+        var cola = window.cola.d3adaptor(d3)
+                .linkDistance(100)
+                .avoidOverlaps(true)
+                .handleDisconnected(false)
+                .size(['100%', '500px'])
+                .nodes([node1, node2])
+                .links([{source: 0, target: 1}]);
+
+        console.log('webcola', cola);
+        return cola;
+    }
     switch(action.type){
+        case actions.UPDATE_GRAPH_DATA:
+            return action.graph;
         default:
-            return graphData
+            return graphData;
     }
 }
 

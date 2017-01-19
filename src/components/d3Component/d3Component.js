@@ -4,9 +4,6 @@
  * 
  */
 var d3 = require('d3');
-// Hack to get to cola from global window.
-var webcola = window.cola;
-var cola = webcola.d3adaptor(d3);
 var D3Chart = {};
 
 
@@ -15,10 +12,7 @@ var D3Chart = {};
  */
 
 D3Chart.create = function(el, props, state) {
-    cola.linkDistance(100)
-        .avoidOverlaps(true)
-        .handleDisconnected(false)
-        .size([props.width, props.height]);
+    
 
     var svg = d3.select(el).append('svg')
         .attr('class', 'd3')
@@ -28,27 +22,27 @@ D3Chart.create = function(el, props, state) {
     svg.append('g')
         .attr('class', 'd3-graph');
 
+    svg.on("mouseleave", () => {props.updateGraphData(state.cola)});
+
     this.update(el, state);
 };
 
 // This is where data updates go!
 D3Chart.update = function(el, state) {
-    this._drawGraph(el, state.data);
+    this._drawGraph(el, state.cola);
 };
 
 D3Chart.destroy = function(el, state) {
 
 };
 
-D3Chart._drawGraph = function(el, graph){
-    cola.nodes(graph.nodes)
-        .links(graph.links)
-        .start();
-    console.log(graph);
+D3Chart._drawGraph = function(el, cola){
+
     var g = d3.select(el).selectAll('.d3-graph');
 
     var nodeSelection = g.selectAll('.data-node')
-        .data(graph.nodes, d => d.index);
+        .data(cola.nodes(), d => d.index)
+        .each(d => {console.log(d)});
 
     var node = nodeSelection.enter().append('circle')
         .attr('class', 'data-node')
@@ -60,10 +54,12 @@ D3Chart._drawGraph = function(el, graph){
     nodeSelection.exit().remove();
 
     var linkSelection = g.selectAll(('.data-link'))
-        .data(graph.links, d => String(d.source.index) + String(d.target.index))
+        .data(cola.links(), d => String(d.source.index) + String(d.target.index))
 
-    var link = linkSelection.enter().append('line')
+    var link = linkSelection.enter().insert('line', '.data-node')
         .attr("class", "data-link")
+        .attr("stroke", "blue")
+        .attr("stroke-width", 2);
 
     cola.on("tick", function (){
         link.attr("x1", d => d.source.x)
@@ -75,6 +71,21 @@ D3Chart._drawGraph = function(el, graph){
             .attr("cy", d => d.y);
     });
 
+    cola.start();
+
 };
+
+
+function processNodes(passedInGraph){
+    console.log("process Nodes")
+    let links = [];
+    Object.keys(passedInGraph.links).forEach(e => {
+        var l = passedInGraph.links[e];
+        var u = passedInGraph.nodes[l.source], v = passedInGraph.nodes[l.target];
+        links.push({source: u, target: v});
+    });
+    console.log("response", {nodes: passedInGraph.nodes, links})
+    return {nodes: passedInGraph.nodes, links}
+}
 
 export const d3Chart = D3Chart;
