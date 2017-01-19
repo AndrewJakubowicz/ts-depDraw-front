@@ -57,6 +57,12 @@ let exampleNodes = [{index: 0, x: 400, y:50, width: 50, height: 50},
 
 exampleNodes.forEach(node => store.dispatch(actions.addNode(node)))
 
+setTimeout(() => {
+  store.dispatch(actions.addEdge({source: {index: 2, x: 200, y:20, width: 40, height: 40},
+target: {index: 0, x: 400, y:50, width: 50, height: 50}}))
+}, 3000);
+
+
 
 
 

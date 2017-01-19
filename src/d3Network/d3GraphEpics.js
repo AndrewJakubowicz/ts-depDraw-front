@@ -30,9 +30,23 @@ const addNodeEpic = action$ =>
         .do(action => d3Graph.pushNode(NODESTORE.get(hashNode(action.node))))
         .mergeMap(_ => Rx.Observable.empty());
 
+/**
+ * Both nodes need to exist otherwise the operation cancels.
+ */
+const addEdgeEpic = action$ =>
+    action$.ofType(actions.ADD_EDGE)
+        .do(({edge: {source, target}}) =>
+            NODESTORE.has(hashNode(source))
+                &&  NODESTORE.has(hashNode(target))
+                &&  (d3Graph.pushLink({source: NODESTORE.get(hashNode(source)),
+                     target: NODESTORE.get(hashNode(target))})
+                     || true)
+                ||  console.error("Those nodes don't exist!!!"))
+        .mergeMap(_ => Rx.Observable.empty());
 
 
 
 export const rootD3Epics = combineEpics(
-    addNodeEpic
+    addNodeEpic,
+    addEdgeEpic
 )

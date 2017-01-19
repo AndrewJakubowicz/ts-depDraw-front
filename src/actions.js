@@ -71,8 +71,17 @@ export const updateCodeMirrorText = text => ({
  */
 
 export const ADD_NODE = "ADD_NODE";
+export const ADD_EDGE = "ADD_EDGE";
 
 export const addNode = node => ({
     type: ADD_NODE,
     node
 });
+
+/**
+ * Edge in the form of {source: obj, target: obj}
+ */
+export const addEdge = edge => ({
+    type: ADD_EDGE,
+    edge
+})
