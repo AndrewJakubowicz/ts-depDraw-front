@@ -14,6 +14,9 @@ import * as actions from './actions';
 import {rootReducer} from './reducers';
 import {rootEpic} from './epics';
 
+// D3
+var d3Graph = require('./components/d3Graph');
+
 const epicMiddleWare = createEpicMiddleware(rootEpic);
 const logger = createLogger();
 let store = createStore(rootReducer,
@@ -44,3 +47,12 @@ setTimeout(_ => {
 setTimeout(_ => {
   store.dispatch(actions.fetchFileText('examples/ex4.ts'));
 }, 5);
+
+
+
+/**DATA FOR DEFAULT NODES */
+const node1 = {index: 0, x: 400, y:50, width: 50, height: 50};
+const node2 = {index: 1, x: 300, y:40, width: 40, height: 40};
+const node3 = {index: 2, x: 200, y:20, width: 40, height: 40};
+
+let graph = d3Graph({nodes: [{nodes: [node1, node2]}], links: [{ source: 0, target: 1 }]});
