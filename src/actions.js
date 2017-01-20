@@ -60,7 +60,35 @@ export const changeToLastFileTab = () => ({
 
 export const UPDATE_CODEMIRROR_TEXT = "UPDATE_CODEMIRROR_TEXT";
 
+
 export const updateCodeMirrorText = text => ({
     type: UPDATE_CODEMIRROR_TEXT,
     text
+});
+
+
+/**
+ * Actions for mutating the d3 graph
+ */
+
+export const ADD_NODE = "ADD_NODE";
+export const ADD_EDGE = "ADD_EDGE";
+export const REMOVE_NODE = "REMOVE_NODE";
+
+export const addNode = node => ({
+    type: ADD_NODE,
+    node
+});
+
+/**
+ * Edge in the form of {source: obj, target: obj}
+ */
+export const addEdge = edge => ({
+    type: ADD_EDGE,
+    edge
+});
+
+export const removeNode = node => ({
+    type: REMOVE_NODE,
+    node
 });

@@ -1,0 +1,120 @@
+import {hashNodeToString} from './util/hashNode';
+
+let d3 = require('d3');
+
+module.exports = (()=> {
+    /**
+     * These are used to help the removal of nodes and edges.
+     * They keep a modal of the state of the mutable store.
+     */
+    let hashNodes = [],
+        hashLinks = [];
+    
+    const width = 1000,
+          height = 400,
+          color = d3.scaleOrdinal(d3.schemeCategory10);
+
+var svg = d3.select("#graph").append("svg")
+            .attr("width", width)
+            .attr("height",height);
+
+
+var nodes = [],
+    links = [];
+
+var simulation = d3.forceSimulation(nodes)
+    .force("charge", d3.forceManyBody().strength(-1000))
+    .force("link", d3.forceLink(links).distance(200))
+    .force("x", d3.forceX())
+    .force("y", d3.forceY())
+    .alphaTarget(1)
+    .on("tick", ticked);
+
+var g = svg.append("g").attr("transform", `translate(${width / 2},${height/2})`),
+    link = g.append("g").attr("stroke", "#bbb").attr("stroke-width", 1.5).selectAll(".link"),
+    node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
+
+function ticked() {
+        node.attr("cx", d => d.x)
+            .attr("cy", d => d.y);
+        link.attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+}
+
+return {
+    restart: function() {
+        node = node.data(nodes, d => d.id);
+        node.exit().remove();
+        link = link.data(links, d => d.source.id + '-' + d.target.id);
+        link.exit().remove();
+        node = node.enter().append("circle").attr("fill", d => color(d.id)).attr("r", 8).merge(node);
+        link = link.enter().append("line").merge(link);
+
+        simulation.nodes(nodes);
+        simulation.force("link").links(links);
+        simulation.alpha(1).restart();
+    },
+    ticked: ticked,
+    /**
+     * Use an external hash map. Push the node object in here, but you'll
+     * need a hash to remove the node.
+     */
+    pushNode: function(node) {
+        nodes.push(node);
+        hashNodes.push(hashNodeToString(node))
+        console.log(hashNodes);
+        this.restart();
+    },
+    /**
+     * It is recommended to use an external hash map to keep track of the objects.
+     * Pass them in here, and use the hash to remove them.
+     */
+    pushLink: function(link){
+        links.push(link);
+        hashLinks.push({source: hashNodeToString(link.source),
+                        target: hashNodeToString(link.target)});
+        this.restart();
+    },
+    /**
+     * links are traversed and all links with the given node hash are destroyed.
+     * Try to only use removeNode.
+     */
+    removeLink: function(nodeHash){
+        links.pop();
+        this.restart();
+    },
+    /**
+     * Pass in the hash code of the node, and it'll splice the correct one based on
+     * the hashing function.
+     * 
+     * Returns true if everything completed successfully
+     */
+    removeNode: function(nodeHashToRemove){
+        let i = hashNodes.indexOf(nodeHashToRemove);
+        console.log('node Hash to remove:', nodeHashToRemove);
+        hashNodes.splice(i, 1);
+        nodes.splice(i, 1);
+        console.log(hashNodes, hashLinks);
+        let _tempHashLinks = [];
+        hashLinks.reduce((i, val) => {
+            console.log(`comparing ${val.source} with ${nodeHashToRemove}`)
+            if (val.source === nodeHashToRemove || val.target === nodeHashToRemove){
+                // Remove this edge.
+                console.log('cutting out index', i);
+                links.splice(i, 1);
+                return i
+            }
+            _tempHashLinks.push(val)
+            return i + 1
+        }, 0)
+
+        hashLinks = _tempHashLinks;
+        this.restart();
+        return true
+    },
+
+
+}
+})()

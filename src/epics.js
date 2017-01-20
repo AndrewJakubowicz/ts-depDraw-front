@@ -3,6 +3,8 @@ import { combineEpics } from 'redux-observable';
 
 import * as actions from './actions';
 
+import {rootD3Epics} from './d3Network/d3GraphEpics';
+
 const {ajax} = Rx.Observable;
 const PORT = 8080;
 
@@ -37,5 +39,6 @@ export const getOpenFileText = action$ =>
 
 export const rootEpic = combineEpics(
     getFileTextEpic,
-    getOpenFileText
+    getOpenFileText,
+    rootD3Epics
 )
