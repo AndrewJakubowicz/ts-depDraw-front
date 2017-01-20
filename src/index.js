@@ -49,21 +49,98 @@ setTimeout(_ => {
 }, 5);
 
 
+/**
+ * PROOF OF CONCEPT DATA.
+ */
 
-/**DATA FOR DEFAULT NODES */
-let exampleNodes = [{index: 0, x: 400, y:50, width: 50, height: 50},
-{index: 1, x: 300, y:40, width: 40, height: 40},
-{index: 2, x: 200, y:20, width: 40, height: 40}];
 
-exampleNodes.forEach(node => store.dispatch(actions.addNode(node)))
+let exampleNodePressed = { kind: 'function',
+                    kindModifiers: '',
+                    start: { line: 7, offset: 9 },
+                    end: { line: 7, offset: 10 },
+                    displayString: 'function D(): void',
+                    "file": "examples/ex7_deepNesting.ts",
+                    documentation: '' };
+
+let exampleDependents = [
+    { kind: 'module',
+        kindModifiers: '',
+        start: { line: 1, offset: 13 },
+        end: { line: 1, offset: 20 },
+        displayString: '"ex4"',
+        documentation: '',
+        file: 'examples/ex4.ts' },
+    { kind: 'function',
+        kindModifiers: 'export',
+        start: { line: 4, offset: 17 },
+        end: { line: 4, offset: 28 },
+        displayString: 'function betterAdder(c: any, d: any): any',
+        documentation: '',
+        file: 'examples/ex4.ts' },
+    { kind: 'module',
+        kindModifiers: '',
+        start: { line: 1, offset: 13 },
+        end: { line: 1, offset: 16 },
+        displayString: '"ex3"',
+        documentation: '',
+        file: 'examples/ex3.ts' } ]
+
+let exampleDependencies = [
+    { kind: 'local function',
+        kindModifiers: '',
+        start: { line: 5, offset: 14 },
+        end: { line: 5, offset: 15 },
+        displayString: '(local function) B(): void',
+        "file": "examples/ex7_deepNesting.ts",
+        documentation: '' },
+    { kind: 'local function',
+        kindModifiers: '',
+        start: { line: 10, offset: 18 },
+        end: { line: 10, offset: 19 },
+        displayString: '(local function) C(): void',
+        "file": "examples/ex7_deepNesting.ts",
+        documentation: '' } ]
+
+
+store.dispatch(actions.addNode(exampleNodePressed));
+
+exampleDependents.forEach(currentNode => {
+  store.dispatch(actions.addNode(currentNode));
+  store.dispatch(actions.addEdge({source: exampleNodePressed,
+                  target: currentNode}))
+});
+
+exampleDependencies.forEach(currentNode => {
+  store.dispatch(actions.addNode(currentNode));
+  store.dispatch(actions.addEdge({source: exampleNodePressed,
+                                 target: currentNode}))
+});
 
 setTimeout(() => {
-  store.dispatch(actions.addEdge({source: {index: 2, x: 200, y:20, width: 40, height: 40},
-target: {index: 0, x: 400, y:50, width: 50, height: 50}}))
-}, 3000);
+  store.dispatch(actions.removeNode(exampleNodePressed))
+}, 3000)
 
+setTimeout(() => {
+  console.log(exampleDependencies)
+  store.dispatch(actions.removeNode(exampleDependencies[1]))
+}, 3400)
 
+setTimeout(() => {
+  store.dispatch(actions.removeNode(exampleDependencies[0]))
+}, 4000)
 
-
-
-
+exampleDependencies.forEach(currentNode => {
+  store.dispatch(actions.addNode(currentNode));
+  store.dispatch(actions.addEdge({source: exampleNodePressed,
+                                 target: currentNode}))
+});
+exampleDependencies.forEach(currentNode => {
+  store.dispatch(actions.addNode(currentNode));
+  store.dispatch(actions.addEdge({source: exampleNodePressed,
+                                 target: currentNode}))
+});
+exampleDependencies.forEach(currentNode => {
+  store.dispatch(actions.addNode(currentNode));
+  store.dispatch(actions.addEdge({source: exampleNodePressed,
+                                 target: currentNode}))
+});

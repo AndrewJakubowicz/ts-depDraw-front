@@ -1,6 +1,15 @@
+import {hashNodeToString} from './util/hashNode';
+
 let d3 = require('d3');
 
 module.exports = (()=> {
+    /**
+     * These are used to help the removal of nodes and edges.
+     * They keep a modal of the state of the mutable store.
+     */
+    let hashNodes = [],
+        hashLinks = [];
+    
     const width = 1000,
           height = 400,
           color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -53,11 +62,9 @@ return {
      * need a hash to remove the node.
      */
     pushNode: function(node) {
-        // TODO: remove this safety
-        if (node.length > 2){
-            return
-        }
         nodes.push(node);
+        hashNodes.push(hashNodeToString(node))
+        console.log(hashNodes);
         this.restart();
     },
     /**
@@ -66,6 +73,8 @@ return {
      */
     pushLink: function(link){
         links.push(link);
+        hashLinks.push({source: hashNodeToString(link.source),
+                        target: hashNodeToString(link.target)});
         this.restart();
     },
     /**
@@ -79,10 +88,31 @@ return {
     /**
      * Pass in the hash code of the node, and it'll splice the correct one based on
      * the hashing function.
+     * 
+     * Returns true if everything completed successfully
      */
-    removeNode: function(nodeHash){
-        nodes.pop();
+    removeNode: function(nodeHashToRemove){
+        let i = hashNodes.indexOf(nodeHashToRemove);
+        console.log('node Hash to remove:', nodeHashToRemove);
+        hashNodes.splice(i, 1);
+        nodes.splice(i, 1);
+        console.log(hashNodes, hashLinks);
+        let _tempHashLinks = [];
+        hashLinks.reduce((i, val) => {
+            console.log(`comparing ${val.source} with ${nodeHashToRemove}`)
+            if (val.source === nodeHashToRemove || val.target === nodeHashToRemove){
+                // Remove this edge.
+                console.log('cutting out index', i);
+                links.splice(i, 1);
+                return i
+            }
+            _tempHashLinks.push(val)
+            return i + 1
+        }, 0)
+
+        hashLinks = _tempHashLinks;
         this.restart();
+        return true
     },
 
 

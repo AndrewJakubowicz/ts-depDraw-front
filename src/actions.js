@@ -72,6 +72,7 @@ export const updateCodeMirrorText = text => ({
 
 export const ADD_NODE = "ADD_NODE";
 export const ADD_EDGE = "ADD_EDGE";
+export const REMOVE_NODE = "REMOVE_NODE";
 
 export const addNode = node => ({
     type: ADD_NODE,
@@ -84,4 +85,9 @@ export const addNode = node => ({
 export const addEdge = edge => ({
     type: ADD_EDGE,
     edge
-})
+});
+
+export const removeNode = node => ({
+    type: REMOVE_NODE,
+    node
+});

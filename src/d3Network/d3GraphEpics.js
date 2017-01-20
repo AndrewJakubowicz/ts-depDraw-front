@@ -2,7 +2,7 @@ import * as Rx from 'rxjs';
 import { combineEpics } from 'redux-observable';
 
 import * as actions from '../actions';
-import {hashNode} from './util/hashNode';
+import {hashNodeToString} from './util/hashNode';
 
 // D3
 var d3Graph = require('./d3Graph');
@@ -26,8 +26,9 @@ const NODESTORE = new Map();
 
 const addNodeEpic = action$ =>
     action$.ofType(actions.ADD_NODE)
-        .do(action => NODESTORE.set(hashNode(action.node), action.node))
-        .do(action => d3Graph.pushNode(NODESTORE.get(hashNode(action.node))))
+        .filter(action => !(NODESTORE.has(hashNodeToString(action.node))))
+        .do(action => NODESTORE.set(hashNodeToString(action.node), JSON.parse(JSON.stringify(action.node))))
+        .do(action => d3Graph.pushNode(NODESTORE.get(hashNodeToString(action.node))))
         .mergeMap(_ => Rx.Observable.empty());
 
 /**
@@ -35,18 +36,35 @@ const addNodeEpic = action$ =>
  */
 const addEdgeEpic = action$ =>
     action$.ofType(actions.ADD_EDGE)
-        .do(({edge: {source, target}}) =>
-            NODESTORE.has(hashNode(source))
-                &&  NODESTORE.has(hashNode(target))
-                &&  (d3Graph.pushLink({source: NODESTORE.get(hashNode(source)),
-                     target: NODESTORE.get(hashNode(target))})
+        .map(({edge: {source, target}}) => ({
+                source: hashNodeToString(source),
+                target: hashNodeToString(target)
+            }))
+        .do(obj => console.log(obj))
+        .do(({source, target}) =>
+                NODESTORE.has(source)
+                &&  NODESTORE.has(target)
+                &&  (d3Graph.pushLink({source: NODESTORE.get(source),
+                     target: NODESTORE.get(target)})
                      || true)
                 ||  console.error("Those nodes don't exist!!!"))
         .mergeMap(_ => Rx.Observable.empty());
 
+/**
+ * This will also remove all the edges associated with that node.
+ */
+const removeNodeEpic = actions$ =>
+    actions$.ofType(actions.REMOVE_NODE)
+        .map(({node}) => hashNodeToString(node))
+        .do(node => NODESTORE.has(node)
+                    && d3Graph.removeNode(node)
+                    || console.error("Error removing node")
+            )
+        .mergeMap(_ => Rx.Observable.empty());
 
 
 export const rootD3Epics = combineEpics(
     addNodeEpic,
-    addEdgeEpic
+    addEdgeEpic,
+    removeNodeEpic
 )
