@@ -63,8 +63,22 @@ const removeNodeEpic = actions$ =>
         .mergeMap(_ => Rx.Observable.empty());
 
 
+const addTokenTypeEpic = actions$ =>
+    actions$.ofType(actions.ADD_D3_TOKEN_TYPE)
+        .throttleTime(50)
+        .mergeMap(({file, line, offset}) => ajax.getJSON(`http://localhost:${PORT}/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`))
+        .filter(data => {
+            if (data && data.hasOwnProperty('success')){
+                return data.success
+            }
+            return false;
+        })
+        .map(quickTypeInfo => quickTypeInfo.body)
+        .map(actions.addNode)
+
 export const rootD3Epics = combineEpics(
     addNodeEpic,
     addEdgeEpic,
-    removeNodeEpic
+    removeNodeEpic,
+    addTokenTypeEpic
 )

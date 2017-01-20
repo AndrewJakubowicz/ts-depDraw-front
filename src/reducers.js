@@ -7,7 +7,7 @@ import Immutable from "immutable";
 /**
  * Reducer for receiving file text data.
  */
-const fileTextReducer = (fileText = "//", action) => {
+const fileTextReducer = (fileText = "// Trying to load initial file", action) => {
     switch(action.type){
         case actions.UPDATE_CODEMIRROR_TEXT:
             if (!(action.text || typeof action.text === 'string')){
@@ -65,6 +65,12 @@ const openFileListReducer = (openFileList = Immutable.List([]), action) => {
  * They have the keys: fileName and openInEditor
  */
 export const getOpenFileList = state => state.openFileList;
+
+export const getOpenFilename = state => {
+    const fileName = state.openFileList
+                          .find(f => f.openInEditor);
+    return fileName ? fileName.get("fileName") : "";
+}
 
 // rootReducer is the base of the store.
 export const rootReducer = combineReducers({
