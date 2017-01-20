@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import React from 'react'
 
-import {getFileText} from '../reducers';
+import {getFileText, getOpenFilename} from '../reducers';
 import * as actions from '../actions';
 
 var CodeMirror = require("codemirror");
@@ -36,9 +36,12 @@ const CodeMapComponent = React.createClass({
                 readOnly: true
         })
 
-        this.myCodeMirror.on('cursorActivity', (event) => {this.props.cursorActivity(this.myCodeMirror, event)});
+        this.myCodeMirror.on('cursorActivity', (event) => {this.props.cursorActivity(this.myCodeMirror,
+                                                                                     event,
+                                                                                     this.props.fileName)});
     },
     render: function() {
+        console.log(this.props.fileName);
         return (<div className="row code-box">
             <div ref={this.receiveRef}></div>
         </div>)
@@ -47,14 +50,17 @@ const CodeMapComponent = React.createClass({
 
 const mapStateToProps = state => {
     return {
-        fileText: getFileText(state)
+        fileText: getFileText(state),
+        fileName: getOpenFilename(state)
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        cursorActivity: (editor, event) => {
-            console.log(editor.getCursor(event));
+        cursorActivity: (editor, event, file) => {
+            let {ch, line} = editor.getCursor(event);
+            ch ++; line ++;
+            dispatch(actions.selectToken(file, line, ch));
         }
     }
 }

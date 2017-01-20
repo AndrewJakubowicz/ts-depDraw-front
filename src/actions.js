@@ -60,11 +60,21 @@ export const changeToLastFileTab = () => ({
 
 export const UPDATE_CODEMIRROR_TEXT = "UPDATE_CODEMIRROR_TEXT";
 
+/** SIDE EFFECT ACTIONS */
+export const SELECT_TOKEN = "SELECT_TOKEN";
+
 
 export const updateCodeMirrorText = text => ({
     type: UPDATE_CODEMIRROR_TEXT,
     text
 });
+
+export const selectToken = (file, line, offset) => ({
+    type: SELECT_TOKEN,
+    file,
+    line,
+    offset
+})
 
 
 /**
