@@ -35,19 +35,6 @@ setTimeout(_ => {
 }, 1);
 
 
-setTimeout(_ => {
-  store.dispatch(actions.fetchFileText('examples/ex3.ts'));
-}, 2);
-setTimeout(_ => {
-  store.dispatch(actions.fetchFileText('examples/ex1.ts'));
-}, 3);
-setTimeout(_ => {
-  store.dispatch(actions.fetchFileText('examples/ex2.ts'));
-}, 4);
-setTimeout(_ => {
-  store.dispatch(actions.fetchFileText('examples/ex4.ts'));
-}, 5);
-
 
 /**
  * PROOF OF CONCEPT DATA.
@@ -129,18 +116,24 @@ setTimeout(() => {
   store.dispatch(actions.removeNode(exampleDependencies[0]))
 }, 4000)
 
-exampleDependencies.forEach(currentNode => {
-  store.dispatch(actions.addNode(currentNode));
-  store.dispatch(actions.addEdge({source: exampleNodePressed,
-                                 target: currentNode}))
-});
-exampleDependencies.forEach(currentNode => {
-  store.dispatch(actions.addNode(currentNode));
-  store.dispatch(actions.addEdge({source: exampleNodePressed,
-                                 target: currentNode}))
-});
-exampleDependencies.forEach(currentNode => {
-  store.dispatch(actions.addNode(currentNode));
-  store.dispatch(actions.addEdge({source: exampleNodePressed,
-                                 target: currentNode}))
-});
+setTimeout(() => store.dispatch(actions.addNode(exampleNodePressed)), 5600);
+
+setTimeout(() => {
+  console.log('start-adding')
+  exampleDependencies.forEach(currentNode => {
+    store.dispatch(actions.addNode(currentNode));
+    store.dispatch(actions.addEdge({source: exampleNodePressed,
+                                  target: currentNode}))
+  });
+  exampleDependencies.forEach(currentNode => {
+    store.dispatch(actions.addNode(currentNode));
+    store.dispatch(actions.addEdge({source: exampleNodePressed,
+                                  target: currentNode}))
+  });
+
+  exampleDependents.forEach(currentNode => {
+    store.dispatch(actions.addNode(currentNode));
+    store.dispatch(actions.addEdge({source: exampleNodePressed,
+                                  target: currentNode}))
+  });
+}, 6000);

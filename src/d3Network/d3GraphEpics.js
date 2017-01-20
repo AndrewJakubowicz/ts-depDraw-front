@@ -56,7 +56,7 @@ const addEdgeEpic = action$ =>
 const removeNodeEpic = actions$ =>
     actions$.ofType(actions.REMOVE_NODE)
         .map(({node}) => hashNodeToString(node))
-        .do(node => NODESTORE.has(node)
+        .do(node => NODESTORE.delete(node)
                     && d3Graph.removeNode(node)
                     || console.error("Error removing node")
             )
