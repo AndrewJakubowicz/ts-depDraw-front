@@ -137,3 +137,22 @@ setTimeout(() => {
                                   target: currentNode}))
   });
 }, 6000);
+
+let exampleNodePressed2 = { kind: 'function',
+                    kindModifiers: '',
+                    start: { line: 3, offset: 9 },
+                    end: { line: 1, offset: 10 },
+                    displayString: 'function D(): void',
+                    "file": "examples/ex7_5deepNesting.ts",
+                    documentation: '' };
+setTimeout(() => {
+  store.dispatch(actions.addNode(exampleNodePressed2));
+}, 6500);
+
+setTimeout(()=>{
+  exampleDependencies.forEach(currentNode => {
+    store.dispatch(actions.addNode(currentNode));
+    store.dispatch(actions.addEdge({source: exampleNodePressed2,
+                                  target: currentNode}))
+  });
+}, 6800)
