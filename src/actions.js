@@ -62,6 +62,9 @@ export const UPDATE_CODEMIRROR_TEXT = "UPDATE_CODEMIRROR_TEXT";
 
 /** SIDE EFFECT ACTIONS */
 export const SELECT_TOKEN = "SELECT_TOKEN";
+export const ADD_D3_TOKEN_TYPE = "ADD_D3_TOKEN_TYPE";
+export const ADD_D3_TOKEN_DEPS = "ADD_D3_TOKEN_DEPS";
+export const ADD_D3_TOKEN_DEPNDTS = "ADD_D3_TOKEN_DEPNDTS";
 
 
 export const updateCodeMirrorText = text => ({
@@ -74,7 +77,28 @@ export const selectToken = (file, line, offset) => ({
     file,
     line,
     offset
-})
+});
+
+export const addD3TokenType = (file, line, offset) => ({
+    type: ADD_D3_TOKEN_TYPE,
+    file,
+    line,
+    offset
+});
+
+export const addD3TokenDeps = (file, line, offset) => ({
+    type: ADD_D3_TOKEN_DEPS,
+    file,
+    line,
+    offset
+});
+
+export const addD3TokenDependents = (file, line, offset) => ({
+    type: ADD_D3_TOKEN_DEPNDTS,
+    file,
+    line,
+    offset
+});
 
 
 /**

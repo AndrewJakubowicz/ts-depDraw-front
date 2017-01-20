@@ -13,11 +13,6 @@ import './myCodeMirror.css';
 
 // Component for CodeMirror
 const CodeMapComponent = React.createClass({
-    componentDidMount: function () {
-        // This runs after the component mounts.
-        // var codeEditorNode = ReactDOM.findDOMNode(this);
-        
-    },
     componentWillReceiveProps: function(newProps) {
         if (this.props.fileText === newProps.fileText){
             return undefined;
@@ -41,7 +36,6 @@ const CodeMapComponent = React.createClass({
                                                                                      this.props.fileName)});
     },
     render: function() {
-        console.log(this.props.fileName);
         return (<div className="row code-box">
             <div ref={this.receiveRef}></div>
         </div>)
@@ -58,9 +52,14 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         cursorActivity: (editor, event, file) => {
+            if (file === ""){
+                return undefined
+            }
             let {ch, line} = editor.getCursor(event);
             ch ++; line ++;
             dispatch(actions.selectToken(file, line, ch));
+            dispatch(actions.addD3TokenType(file,line,ch));
+            
         }
     }
 }
