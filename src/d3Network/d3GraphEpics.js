@@ -40,7 +40,6 @@ const addEdgeEpic = action$ =>
                 source: hashNodeToString(source),
                 target: hashNodeToString(target)
             }))
-        .do(obj => console.log(obj))
         .do(({source, target}) =>
                 NODESTORE.has(source)
                 &&  NODESTORE.has(target)
@@ -66,19 +65,58 @@ const removeNodeEpic = actions$ =>
 const addTokenTypeEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_TOKEN_TYPE)
         .throttleTime(50)
-        .mergeMap(({file, line, offset}) => ajax.getJSON(`http://localhost:${PORT}/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`))
-        .filter(data => {
-            if (data && data.hasOwnProperty('success')){
-                return data.success
-            }
-            return false;
-        })
-        .map(quickTypeInfo => quickTypeInfo.body)
+        .mergeMap(({file, line, offset}) => ajax.getJSON(`http://localhost:${PORT}/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`)
+            .filter(data => {
+                if (data && data.hasOwnProperty('success')){
+                    return data.success
+                }
+                throw Error("no type information")
+            })
+            .map(quickTypeInfo => quickTypeInfo.body)
+            .map(quickTypeInfo => ({
+                ...quickTypeInfo,
+                file: file
+            })))
         .map(actions.addNode)
+        .catch(err => {
+            console.log("no type info", err);
+            return Rx.Observable.empty();
+        })
+
+
+
+/**
+ * TODO: make sure that this always occurs in the correct order.
+ */
+const addAllTokenDependenciesEpic = actions$ =>
+    actions$.ofType(actions.ADD_D3_TOKEN_DEPS)
+        .mergeMap(({file, line, offset}) => 
+            ajax.getJSON(`http://localhost:${PORT}/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`)
+                .filter(data => {
+                    if (data && data.hasOwnProperty('success')){
+                        return data.success
+                    }
+                    return false;
+                })
+            .map(quickTypeInfo => quickTypeInfo.body)
+            .map(typeBody => ({
+                ...typeBody,
+                file: file
+        })))
+        .flatMap(v => 
+            ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+                .map(listOfDeps => listOfDeps.map(deps => ({
+                                        source: v,
+                                        target: deps})))
+        ).flatMap(v => v)
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]))
+        .do(v => console.log('Piped: ', v));
+                                                            
 
 export const rootD3Epics = combineEpics(
     addNodeEpic,
     addEdgeEpic,
     removeNodeEpic,
-    addTokenTypeEpic
+    addTokenTypeEpic,
+    addAllTokenDependenciesEpic
 )
