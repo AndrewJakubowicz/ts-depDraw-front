@@ -7,3 +7,8 @@
   color: lightgrey;
   flex: 0 1 auto;
 }
+
+
+line.line {
+  marker-end: url(#end-arrow);
+}

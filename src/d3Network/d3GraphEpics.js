@@ -114,12 +114,24 @@ const addAllTokenDependenciesEpic = actions$ =>
                                         target: deps})))
         ).flatMap(v => v)
         .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
-                                                            
+
+const addAllTokenDependentsEpic = actions$ =>
+    actions$.ofType(actions.ADD_D3_TOKEN_DEPNDTS)
+        .mergeMap(chainGetRootTokenType)
+        .flatMap(v => 
+            ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependents?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+                .map(listOfDeps => listOfDeps.map(depnts => ({
+                                        source: depnts,
+                                        target: v})))
+        )
+        .flatMap(v => v)
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.source), actions.addEdge(v)]));
 
 export const rootD3Epics = combineEpics(
     addNodeEpic,
     addEdgeEpic,
     removeNodeEpic,
     addTokenTypeEpic,
-    addAllTokenDependenciesEpic
+    addAllTokenDependenciesEpic,
+    addAllTokenDependentsEpic
 )

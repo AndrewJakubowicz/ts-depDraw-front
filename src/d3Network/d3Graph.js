@@ -17,14 +17,32 @@ module.exports = (()=> {
 
     var svg = d3.select("#graph").append("svg")
                 .attr("width", width)
-                .attr("height",height);
+                .attr("height", height)
+                .attr("pointer-events", "all");
+
+
+    /**
+     * Add the arrow heads for the lines.
+     */
+    svg.append('svg:defs').append('svg:marker')
+        .attr("id", "end-arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 20)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+          .append('svg:path')
+            .attr("d", "M0,-5L10,0L0,5L2,0")
+            .attr("stroke-width", "0px")
+            .attr("fill", "#000");
 
     var nodes = [],
         links = [];
     
     var simulation = cola.d3adaptor(d3)
-        .linkDistance(50)
         .avoidOverlaps(true)
+        .flowLayout('x', 50)
+        .jaccardLinkLengths(50)
         .handleDisconnected(false)
         .size([width, height])
         .nodes(nodes)
@@ -62,6 +80,7 @@ module.exports = (()=> {
 
             link = link.enter()
                         .append("line")
+                        .attr("class", "line")
                         .merge(link);
             
             // simulation.nodes(nodes);
