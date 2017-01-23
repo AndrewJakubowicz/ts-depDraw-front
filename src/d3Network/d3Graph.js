@@ -25,7 +25,7 @@ module.exports = (()=> {
     var simulation = cola.d3adaptor(d3)
         .linkDistance(50)
         .avoidOverlaps(true)
-        .handleDisconnected(true)
+        .handleDisconnected(false)
         .size([width, height])
         .nodes(nodes)
         .links(links)

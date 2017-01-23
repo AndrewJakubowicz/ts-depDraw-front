@@ -81,16 +81,13 @@ const addTokenTypeEpic = actions$ =>
         .catch(err => {
             console.log("no type info", err);
             return Rx.Observable.empty();
-        })
-
+        });
 
 
 /**
- * TODO: make sure that this always occurs in the correct order.
+ * Gets the root token type, used as helper function.
  */
-const addAllTokenDependenciesEpic = actions$ =>
-    actions$.ofType(actions.ADD_D3_TOKEN_DEPS)
-        .mergeMap(({file, line, offset}) => 
+const chainGetRootTokenType = ({file, line, offset}) => 
             ajax.getJSON(`http://localhost:${PORT}/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`)
                 .filter(data => {
                     if (data && data.hasOwnProperty('success')){
@@ -102,15 +99,21 @@ const addAllTokenDependenciesEpic = actions$ =>
             .map(typeBody => ({
                 ...typeBody,
                 file: file
-        })))
+        }));
+
+/**
+ * Adds all the token dependency nodes and edges.
+ */
+const addAllTokenDependenciesEpic = actions$ =>
+    actions$.ofType(actions.ADD_D3_TOKEN_DEPS)
+        .mergeMap(chainGetRootTokenType)
         .flatMap(v => 
             ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
                 .map(listOfDeps => listOfDeps.map(deps => ({
                                         source: v,
                                         target: deps})))
         ).flatMap(v => v)
-        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]))
-        .do(v => console.log('Piped: ', v));
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
                                                             
 
 export const rootD3Epics = combineEpics(
