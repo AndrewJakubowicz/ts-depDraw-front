@@ -61,7 +61,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(actions.selectToken(file, line, ch));
             dispatch(actions.addD3TokenType(file,line,ch));
             dispatch(actions.addD3TokenDeps(file,line,ch));
-            // dispatch(actions.addD3TokenDependents(file,line,ch));
+            dispatch(actions.addD3TokenDependents(file,line,ch));
         }
     }
 }
