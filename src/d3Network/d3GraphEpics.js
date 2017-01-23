@@ -113,7 +113,7 @@ const addAllTokenDependenciesEpic = actions$ =>
                                         source: deps,
                                         target: v})))
         ).flatMap(v => v)
-        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.source), actions.addEdge(v)]));
 
 const addAllTokenDependentsEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_TOKEN_DEPNDTS)
@@ -125,7 +125,7 @@ const addAllTokenDependentsEpic = actions$ =>
                                         target: depnts})))
         )
         .flatMap(v => v)
-        .flatMap(v => Rx.Observable.from([actions.addNode(v.source), actions.addEdge(v)]));
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
 
 export const rootD3Epics = combineEpics(
     addNodeEpic,
