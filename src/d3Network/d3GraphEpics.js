@@ -110,8 +110,8 @@ const addAllTokenDependenciesEpic = actions$ =>
         .flatMap(v => 
             ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
                 .map(listOfDeps => listOfDeps.map(deps => ({
-                                        source: v,
-                                        target: deps})))
+                                        source: deps,
+                                        target: v})))
         ).flatMap(v => v)
         .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
 
@@ -121,8 +121,8 @@ const addAllTokenDependentsEpic = actions$ =>
         .flatMap(v => 
             ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependents?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
                 .map(listOfDeps => listOfDeps.map(depnts => ({
-                                        source: depnts,
-                                        target: v})))
+                                        source: v,
+                                        target: depnts})))
         )
         .flatMap(v => v)
         .flatMap(v => Rx.Observable.from([actions.addNode(v.source), actions.addEdge(v)]));
