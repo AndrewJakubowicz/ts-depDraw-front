@@ -30,6 +30,9 @@ const CodeMapComponent = React.createClass({
                 matchBrackets: true,
                 readOnly: true
         })
+        /** ONE DAY WORK OUT HOW TO GET RID OF THIS! */
+        window.myCodeMirror = this.myCodeMirror;
+        /**TODO: GET RID OF THIS GLOBAL DEP. */
 
         this.myCodeMirror.on('cursorActivity', (event) => {this.props.cursorActivity(this.myCodeMirror,
                                                                                      event,
@@ -37,7 +40,7 @@ const CodeMapComponent = React.createClass({
     },
     render: function() {
         return (<div className="row code-box">
-            <div ref={this.receiveRef}></div>
+            <div data-codeMirror={this.myCodeMirror} ref={this.receiveRef}></div>
         </div>)
     }
 });
@@ -58,10 +61,12 @@ const mapDispatchToProps = dispatch => {
             let {ch, line} = editor.getCursor(event);
             ch ++; line ++;
             // TODO: put these in the appropriate places.
-            dispatch(actions.selectToken(file, line, ch));
-            dispatch(actions.addD3TokenType(file,line,ch));
-            dispatch(actions.addD3TokenDeps(file,line,ch));
-            dispatch(actions.addD3TokenDependents(file,line,ch));
+            if (!window.cursorInD3){
+                dispatch(actions.selectToken(file, line, ch));
+                dispatch(actions.addD3TokenType(file,line,ch));
+                dispatch(actions.addD3TokenDeps(file,line,ch));
+                dispatch(actions.addD3TokenDependents(file,line,ch));
+            }
         }
     }
 }

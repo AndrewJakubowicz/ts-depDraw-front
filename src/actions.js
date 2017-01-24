@@ -59,17 +59,39 @@ export const changeToLastFileTab = () => ({
  */
 
 export const UPDATE_CODEMIRROR_TEXT = "UPDATE_CODEMIRROR_TEXT";
+export const FOCUS_TOKEN_CLICKED = "FOCUS_TOKEN_CLICKED";
 
 /** SIDE EFFECT ACTIONS */
 export const SELECT_TOKEN = "SELECT_TOKEN";
 export const ADD_D3_TOKEN_TYPE = "ADD_D3_TOKEN_TYPE";
 export const ADD_D3_TOKEN_DEPS = "ADD_D3_TOKEN_DEPS";
 export const ADD_D3_TOKEN_DEPNDTS = "ADD_D3_TOKEN_DEPNDTS";
+export const HIGHLIGHT_CODEMIRROR_REGION = "HIGHLIGHT_CODEMIRROR_REGION";
 
 
 export const updateCodeMirrorText = text => ({
     type: UPDATE_CODEMIRROR_TEXT,
     text
+});
+
+/**
+ * opens new files and highlights token.
+ */
+export const focusTokenClicked = (file, openFile, codeMirrorInstance, anchor, head) =>
+    ({
+        type: FOCUS_TOKEN_CLICKED,
+        file,
+        openFile,
+        codeMirrorInstance,
+        anchor,
+        head
+    });
+
+export const highlightCodeMirrorRegion = (codeMirrorInstance, anchor, head) => ({
+    type: HIGHLIGHT_CODEMIRROR_REGION,
+    codeMirrorInstance,
+    anchor,
+    head
 });
 
 export const selectToken = (file, line, offset) => ({

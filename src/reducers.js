@@ -37,6 +37,9 @@ const openFileListReducer = (openFileList = Immutable.List([]), action) => {
             }
             // Set all fileNames to openInEditor to false.
             openFileList = openFileList.map(({fileName}) => new openFileListRecord({fileName}));
+            if (openFileList.contains(new openFileListRecord({fileName: action.fileName}))){
+                return openFileList.map(({fileName}) => new openFileListRecord({fileName, openInEditor: fileName === action.fileName}));
+            }
             return openFileList.push(new openFileListRecord({fileName: action.fileName, openInEditor: true}));
 
         case actions.REMOVE_OPEN_FILE_NAME:
