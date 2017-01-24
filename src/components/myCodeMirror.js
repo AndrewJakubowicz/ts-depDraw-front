@@ -30,6 +30,9 @@ const CodeMapComponent = React.createClass({
                 matchBrackets: true,
                 readOnly: true
         })
+        /** ONE DAY WORK OUT HOW TO GET RID OF THIS! */
+        window.myCodeMirror = this.myCodeMirror;
+        /**TODO: GET RID OF THIS GLOBAL DEP. */
 
         this.myCodeMirror.on('cursorActivity', (event) => {this.props.cursorActivity(this.myCodeMirror,
                                                                                      event,
@@ -37,7 +40,7 @@ const CodeMapComponent = React.createClass({
     },
     render: function() {
         return (<div className="row code-box">
-            <div ref={this.receiveRef}></div>
+            <div data-codeMirror={this.myCodeMirror} ref={this.receiveRef}></div>
         </div>)
     }
 });

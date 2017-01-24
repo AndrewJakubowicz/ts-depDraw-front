@@ -75,6 +75,7 @@ module.exports = (()=> {
                     .append("circle")
                     .attr("fill", (d, _) => color(hashNodes.indexOf(hashNodeToString(d))))
                     .attr("r", 8)
+                    .on("mousedown", clickOnNode)
                     .call(simulation.drag)
                     .merge(node);
 
@@ -146,3 +147,11 @@ module.exports = (()=> {
 
     }
 })()
+
+
+
+function clickOnNode(d) {
+    const codeMirror = window.myCodeMirror;
+    codeMirror.setSelection({line: d.start.line - 1, ch: d.start.offset - 1},
+                            {line: d.end.line - 1, ch: d.end.offset - 1})
+}
