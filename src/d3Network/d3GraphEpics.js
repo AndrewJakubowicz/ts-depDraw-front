@@ -127,11 +127,36 @@ const addAllTokenDependentsEpic = actions$ =>
         .flatMap(v => v)
         .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
 
+const focusTokenTextEpic = actions$ =>
+    actions$.ofType(actions.FOCUS_TOKEN_CLICKED)
+        .mergeMap(({file,
+            openFile,
+            codeMirrorInstance,
+            anchor,
+            head}) => {
+                let opList = [];
+                if (openFile !== file){
+                    opList.push(actions.addOpenFileName(file));
+                    opList.push(actions.getTextForOpenFile(file))
+                }
+                opList.push(actions.highlightCodeMirrorRegion(codeMirrorInstance, anchor, head));
+                return Rx.Observable.from(opList)
+            });
+const highlightCodeMirrorRegionEpic = actions$ =>
+    actions$.ofType(actions.HIGHLIGHT_CODEMIRROR_REGION)
+        .do(({codeMirrorInstance, anchor, head}) => {
+            codeMirrorInstance.setSelection({line: anchor.line - 1, ch: anchor.offset - 1},
+                                    {line: head.line - 1, ch: head.offset - 1})
+        })
+        .mergeMap(() => Rx.Observable.empty());
+
 export const rootD3Epics = combineEpics(
     addNodeEpic,
     addEdgeEpic,
     removeNodeEpic,
     addTokenTypeEpic,
     addAllTokenDependenciesEpic,
-    addAllTokenDependentsEpic
+    addAllTokenDependentsEpic,
+    focusTokenTextEpic,
+    highlightCodeMirrorRegionEpic
 )

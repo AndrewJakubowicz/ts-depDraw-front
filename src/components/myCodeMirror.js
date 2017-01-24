@@ -61,10 +61,12 @@ const mapDispatchToProps = dispatch => {
             let {ch, line} = editor.getCursor(event);
             ch ++; line ++;
             // TODO: put these in the appropriate places.
-            dispatch(actions.selectToken(file, line, ch));
-            dispatch(actions.addD3TokenType(file,line,ch));
-            dispatch(actions.addD3TokenDeps(file,line,ch));
-            dispatch(actions.addD3TokenDependents(file,line,ch));
+            if (!window.cursorInD3){
+                dispatch(actions.selectToken(file, line, ch));
+                dispatch(actions.addD3TokenType(file,line,ch));
+                dispatch(actions.addD3TokenDeps(file,line,ch));
+                dispatch(actions.addD3TokenDependents(file,line,ch));
+            }
         }
     }
 }

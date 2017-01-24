@@ -1,7 +1,11 @@
 import {hashNodeToString} from './util/hashNode';
+import * as actions from '../actions';
+import * as reducers from '../reducers';
 
 let d3 = require('d3');
 let cola = window.cola;
+
+
 
 module.exports = (()=> {
     /**
@@ -18,7 +22,9 @@ module.exports = (()=> {
     var svg = d3.select("#graph").append("svg")
                 .attr("width", width)
                 .attr("height", height)
-                .attr("pointer-events", "all");
+                .attr("pointer-events", "all")
+                .on("mouseenter", () => {window.cursorInD3 = true;})
+                .on("mouseleave", () => {window.cursorInD3 = false;});
 
 
     /**
@@ -151,7 +157,13 @@ module.exports = (()=> {
 
 
 function clickOnNode(d) {
+    const openFile = reducers.getOpenFilename(window.store.getState());
     const codeMirror = window.myCodeMirror;
-    codeMirror.setSelection({line: d.start.line - 1, ch: d.start.offset - 1},
-                            {line: d.end.line - 1, ch: d.end.offset - 1})
+    
+    window.store.dispatch(actions.focusTokenClicked(d.file,
+        openFile,
+        codeMirror,
+        JSON.parse(JSON.stringify(d.start)),
+        JSON.parse(JSON.stringify(d.end))));
+    
 }
