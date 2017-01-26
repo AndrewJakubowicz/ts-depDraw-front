@@ -8,6 +8,22 @@ let cola = window.cola;
 
 
 module.exports = (()=> {
+    /** Helper functions for display */
+
+    // Thanks http://stackoverflow.com/a/3426956/6421793
+    const strToRGB = s => {
+        var hash = 0;
+        for (var i = 0; i < s.length; i++) {
+            hash = s.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        var c = (hash & 0x00FFFFFF)
+            .toString(16)
+            .toUpperCase();
+
+        return "#" + "00000".substring(0, 6 - c.length) + c;
+    }
+
+
     /**
      * These are used to help the removal of nodes and edges.
      * They keep a modal of the state of the mutable store.
@@ -16,8 +32,7 @@ module.exports = (()=> {
         hashLinks = [];
     
     const width = 1000,
-          height = 400,
-          color = d3.scaleOrdinal(d3.schemeCategory10);
+          height = 400;
 
     var svg = d3.select("#graph").append("svg")
                 .attr("width", width)
@@ -56,12 +71,18 @@ module.exports = (()=> {
         .on("tick", ticked);
 
     var g = svg.append("g"),
-        link = g.append("g").attr("stroke", "#bbb").attr("stroke-width", 1.5).selectAll(".link"),
-        node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
+        link = g.append("g")
+            .attr("stroke", "#bbb")
+            .attr("stroke-width", 1.5)
+            .selectAll(".link"),
+        node = g.append("g")
+            .attr("stroke", "#fff")
+            .attr("stroke-width", 1.5)
+            .selectAll(".node");
 
     function ticked() {
-            node.attr("cx", d => d.x)
-                .attr("cy", d => d.y);
+            node.attr("x", d => d.x - 10)
+                .attr("y", d => d.y - 5);
             link.attr("x1", d => d.source.x)
                 .attr("y1", d => d.source.y)
                 .attr("x2", d => d.target.x)
@@ -71,16 +92,17 @@ module.exports = (()=> {
     return {
         restart: function() {
 
-            node = node.data(nodes, d => {console.log(d); return d.index});
+            node = node.data(nodes, d => d.index);
             node.exit().remove();
 
             link = link.data(links, d => d.source.index + '-' + d.target.index);
             link.exit().remove();
 
             node = node.enter()
-                    .append("circle")
-                    .attr("fill", (d, _) => color(hashNodes.indexOf(hashNodeToString(d))))
-                    .attr("r", 8)
+                    .append("rect")
+                    .attr("fill", d => strToRGB(d.file))
+                    .attr("width", d => d.width)
+                    .attr("height", d => d.height)
                     .on("mousedown", clickOnNode)
                     .call(simulation.drag)
                     .merge(node);
