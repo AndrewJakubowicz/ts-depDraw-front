@@ -110,10 +110,10 @@ const addAllTokenDependenciesEpic = actions$ =>
         .flatMap(v => 
             ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
                 .map(listOfDeps => listOfDeps.map(deps => ({
-                                        source: deps,
-                                        target: v})))
+                                        source: v,
+                                        target: deps})))
         ).flatMap(v => v)
-        .flatMap(v => Rx.Observable.from([actions.addNode(v.source), actions.addEdge(v)]));
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
 
 const addAllTokenDependentsEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_TOKEN_DEPNDTS)
@@ -121,11 +121,11 @@ const addAllTokenDependentsEpic = actions$ =>
         .flatMap(v => 
             ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependents?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
                 .map(listOfDeps => listOfDeps.map(depnts => ({
-                                        source: v,
-                                        target: depnts})))
+                                        source: depnts,
+                                        target: v})))
         )
         .flatMap(v => v)
-        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.source), actions.addEdge(v)]));
 
 const focusTokenTextEpic = actions$ =>
     actions$.ofType(actions.FOCUS_TOKEN_CLICKED)
