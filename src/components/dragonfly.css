@@ -1,0 +1,32 @@
+
+
+div.dragonFly {
+    position: absolute;
+    width: 500px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: 400px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: stretch;
+    align-items: stretch;
+}
+
+/*<div classID="leftBox"></div>
+            <div classID="centreBox"></div>
+            <div classID="rightBox"></div>*/
+#leftBox {
+    flex-grow: 1;
+    border: 3px solid green;
+}
+
+#centreBox {
+    flex-grow: 2;
+}
+
+#rightBox {
+    flex-grow: 1;
+}
