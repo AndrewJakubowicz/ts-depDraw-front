@@ -19,14 +19,22 @@ div.dragonFly {
             <div classID="centreBox"></div>
             <div classID="rightBox"></div>*/
 #leftBox {
+    position: relative;
     flex-grow: 1;
-    border: 3px solid green;
+    flex-direction: column;
 }
 
 #centreBox {
-    flex-grow: 2;
+    flex-grow: 1.5;
+    border: 1px solid blue;
 }
 
 #rightBox {
+    position: relative;
     flex-grow: 1;
+    border: 1px solid red;
+}
+
+.dropdownItem{
+
 }
