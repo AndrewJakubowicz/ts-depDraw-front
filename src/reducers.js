@@ -94,6 +94,12 @@ const linkedTokenReducer = (state = new dragonFlyRecord(), action) => {
                 depnts: state.depnts,
                 selectedToken: state.selectedToken
             });
+        case actions.POPULATE_DRAGONFLY_DEPNTS:
+            return new dragonFlyRecord({
+                deps: state.deps,
+                depnts: action.listOfDepnts,
+                selectedToken: state.selectedToken
+            });
         default:
             return state;
     }

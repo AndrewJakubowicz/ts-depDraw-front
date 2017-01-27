@@ -1,16 +1,18 @@
 import {connect} from 'react-redux';
 import React from 'react';
 
-import {getFocussedTokenFromState, getDependenciesFromState} from '../reducers';
+import {hashNodeToString} from '../d3Network/util/hashNode';
+
+import {getFocussedTokenFromState, getDependenciesFromState, getDependentsFromState} from '../reducers';
 
 import './dragonfly.css'
 
 const populateList = dropDownList => {
-    if (!(dropDownList || dropDownList.length !== 0)){
+    if (!(dropDownList && dropDownList.length !== 0)){
         return <p>EMPTY</p>
     }
     return dropDownList.map(v => (
-        <div className="dropdownItem"><a href="#">{v.file}</a></div>
+        <div key={hashNodeToString(v) + '-div'} className="dropdownItem"><span key={hashNodeToString(v) + '-span'}>{v.kind + ',' + v.displayString + ',' + v.file}</span></div>
     ));
 }
 
@@ -18,9 +20,7 @@ const populateList = dropDownList => {
 const DragonFlyComponent = props => (
     <div id = "dragonFly">
         <div id="leftBox">
-            {props.leftList.map(v => (
-                <div className="dropdownItem"><a href="#">{v.file}</a></div>
-            ))}
+            {populateList(props.leftList)}
         </div>
         <div id="centreBox">
             <p>{props.centreData.displayString}</p>
@@ -33,7 +33,7 @@ const DragonFlyComponent = props => (
 
 
 const mapStateToProps = state => ({
-    leftList: [{file: "RaR", kind: "function"}, {file: "rar", kind: "function"}],
+    leftList: getDependentsFromState(state),
     rightList: getDependenciesFromState(state),
     centreData: getFocussedTokenFromState(state)
 });

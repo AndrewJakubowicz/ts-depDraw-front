@@ -82,11 +82,18 @@ const populateDragonflyDepEpic = actions$ =>
         ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${file}&line=${line}&offset=${offset}`))
     .map(actions.populateDragonflyDeps);
 
+const populateDragonflyDepntsEpic = actions$ =>
+ actions$.ofType(actions.FETCH_DEPNTS)
+    .mergeMap(({file, line, offset}) =>
+        ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependents?filePath=${file}&line=${line}&offset=${offset}`))
+    .map(actions.populateDragonflyDepnts);
+
 const dragonFlyEpics = combineEpics(
     openDragonflyEpic,
     closeDragonflyEpic,
     populateDragonflySelectedEpic,
-    populateDragonflyDepEpic
+    populateDragonflyDepEpic,
+    populateDragonflyDepntsEpic
 )
 
 export const rootEpic = combineEpics(

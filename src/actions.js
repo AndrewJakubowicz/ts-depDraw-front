@@ -187,6 +187,12 @@ export const fetchDeps = (file, line, offset) => ({
     offset
 });
 
+export const fetchDepnts = (file, line, offset) => ({
+    type: FETCH_DEPNTS,
+    file,
+    line,
+    offset
+});
 
 export const populateDragonflyDeps = listOfDeps => ({
     type: POPULATE_DRAGONFLY_DEPS,
