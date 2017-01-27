@@ -72,7 +72,7 @@ export const getOpenFileList = state => state.openFileList;
 export const getOpenFilename = state => {
     const fileName = state.openFileList
                           .find(f => f.openInEditor);
-    return fileName ? fileName.get("fileName") : "";
+    return fileName ? fileName["fileName"] : "";
 }
 
 // rootReducer is the base of the store.
