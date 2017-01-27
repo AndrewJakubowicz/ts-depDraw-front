@@ -148,3 +148,50 @@ export const removeNode = node => ({
     type: REMOVE_NODE,
     node
 });
+
+
+/**
+ * DRAGONFLY
+ */
+
+export const OPEN_DRAGONFLY = "OPEN_DRAGONFLY";
+export const CLOSE_DRAGONFLY = "CLOSE_DRAGONFLY";
+
+export const POPULATE_DRAGONFLY_DEPS = "POPULATE_DRAGONFLY_DEPS";
+export const POPULATE_DRAGONFLY_DEPNTS = "POPULATE_DRAGONFLY_DEPNTS";
+export const POPULATE_DRAGONFLY_TOKEN = "POPULATE_DRAGONFLY_TOKEN";
+
+export const FETCH_DEPS = "FETCH_DEPS";
+export const FETCH_DEPNTS = "FETCH_DEPNTS";
+export const FETCH_SELECTED = "FETCH_SELECTED";
+
+export const openDragonfly = () => ({
+    type: OPEN_DRAGONFLY
+});
+
+export const closeDragonfly = () => ({
+    type: CLOSE_DRAGONFLY
+});
+
+export const fetchSelected = (file, line, offset) => ({
+    type: FETCH_SELECTED,
+    file,
+    line,
+    offset
+});
+
+
+export const populateDragonflyDeps = listOfDeps => ({
+    type: POPULATE_DRAGONFLY_DEPS,
+    listOfDeps
+});
+
+export const populateDragonflyDepnts = listOfDepnts => ({
+    type: POPULATE_DRAGONFLY_DEPNTS,
+    listOfDepnts
+});
+
+export const populateDragonflySelectedToken = selectedToken => ({
+    type: POPULATE_DRAGONFLY_TOKEN,
+    selectedToken
+});

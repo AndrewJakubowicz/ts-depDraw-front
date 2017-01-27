@@ -75,8 +75,34 @@ export const getOpenFilename = state => {
     return fileName ? fileName["fileName"] : "";
 }
 
+
+/**
+ * Dependency list and dependent list.
+ */
+const dragonFlyRecord = new Immutable.Record({deps: [], depnts: [], selectedToken: {}})
+const linkedTokenReducer = (state = new dragonFlyRecord(), action) => {
+    switch (action.type){
+        case actions.POPULATE_DRAGONFLY_TOKEN:
+            return new dragonFlyRecord({
+                deps: state.deps,
+                depnts: state.depnts,
+                selectedToken: action.selectedToken
+            });
+        default:
+            return state;
+    }
+}
+
+export const getDependenciesFromState = state => state.linkedTokens.deps;
+export const getDependentsFromState = state => state.linkedTokens.depnts;
+export const getFocussedTokenFromState = state => {
+    console.log("FOCUSSED GETTING", state.linkedTokens.selectedToken)
+    return state.linkedTokens.selectedToken;
+}
+
 // rootReducer is the base of the store.
 export const rootReducer = combineReducers({
     openFileText: fileTextReducer,
-    openFileList: openFileListReducer
+    openFileList: openFileListReducer,
+    linkedTokens: linkedTokenReducer 
 });

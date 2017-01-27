@@ -34,12 +34,14 @@ const CodeMapComponent = React.createClass({
         window.myCodeMirror = this.myCodeMirror;
         /**TODO: GET RID OF THIS GLOBAL DEP. */
 
-        this.myCodeMirror.on('cursorActivity', (event) => {this.props.cursorActivity(this.myCodeMirror,
-                                                                                     event,
-                                                                                     this.props.fileName)});
+        this.myCodeMirror.on('cursorActivity', (event) => {
+            this.props.cursorActivity(this.myCodeMirror,event,this.props.fileName)
+        });
     },
     render: function() {
-        return (<div className="row code-box">
+        return (
+        <div className="row code-box"
+            onClick={e => e.stopPropagation()}>
             <div data-codeMirror={this.myCodeMirror} ref={this.receiveRef}></div>
         </div>)
     }
@@ -62,11 +64,14 @@ const mapDispatchToProps = dispatch => {
             ch ++; line ++;
             // TODO: put these in the appropriate places.
             if (!window.cursorInD3){
-                dispatch(actions.selectToken(file, line, ch));
-                dispatch(actions.addD3TokenType(file,line,ch));
-                dispatch(actions.addD3TokenDeps(file,line,ch));
-                dispatch(actions.addD3TokenDependents(file,line,ch));
+                dispatch(actions.openDragonfly());
+                dispatch(actions.fetchSelected(file, line, ch));
+                // dispatch(actions.selectToken(file, line, ch));
+                // dispatch(actions.addD3TokenType(file,line,ch));
+                // dispatch(actions.addD3TokenDeps(file,line,ch));
+                // dispatch(actions.addD3TokenDependents(file,line,ch));
             }
+            
         }
     }
 }

@@ -1,6 +1,6 @@
 
 
-div.dragonFly {
+div#dragonFly {
     position: absolute;
     width: 500px;
     height: 40px;
@@ -9,10 +9,11 @@ div.dragonFly {
     left: 0;
     right: 0;
     top: 400px;
-    display: -webkit-flex;
-    display: flex;
+    /*display: -webkit-flex;
+    display: flex;*/
     -webkit-align-items: stretch;
     align-items: stretch;
+    display: none;
 }
 
 /*<div classID="leftBox"></div>
@@ -33,8 +34,4 @@ div.dragonFly {
     position: relative;
     flex-grow: 1;
     border: 1px solid red;
-}
-
-.dropdownItem{
-
 }

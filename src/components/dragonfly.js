@@ -1,30 +1,33 @@
 import {connect} from 'react-redux';
 import React from 'react';
 
+import {getFocussedTokenFromState} from '../reducers';
+
 import './dragonfly.css'
 
-const DragonFlyComponent = React.createClass({
-    render: function () {
-        return <div className = "dragonFly">
-            <div id="leftBox">
-                {this.props.leftList.map(v => (
+const DragonFlyComponent = props => (
+    <div id = "dragonFly">
+        <div id="leftBox">
+            {props.leftList.map(v => (
+                <div className="dropdownItem"><a href="#">{v.file}</a></div>
+            ))}
+        </div>
+        <div id="centreBox">
+            <p>{props.centreData.displayString}</p>
+        </div>
+        <div id="rightBox">
+            {props.rightList.map(v => (
                     <div className="dropdownItem"><a href="#">{v.file}</a></div>
                 ))}
-            </div>
-            <div id="centreBox"></div>
-            <div id="rightBox">
-                {this.props.rightList.map(v => (
-                        <div className="dropdownItem"><a href="#">{v.file}</a></div>
-                    ))}
-            </div>
         </div>
-    }
-});
+    </div>
+)
 
 
 const mapStateToProps = state => ({
     leftList: [{file: "RaR", kind: "function"}, {file: "rar", kind: "function"}],
-    rightList: [{file: "rar2", kind: "function"}, {file: "rar3", kind: "function"}]
+    rightList: [{file: "rar2", kind: "function"}, {file: "rar3", kind: "function"}],
+    centreData: getFocussedTokenFromState(state)
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -34,3 +34,7 @@ setTimeout(_ => {
   store.dispatch(actions.fetchFileText());
 }, 1);
 
+// Close the dragonfly if they click away from the codeMirror.
+window.addEventListener("click", e => {
+  store.dispatch(actions.closeDragonfly());
+})

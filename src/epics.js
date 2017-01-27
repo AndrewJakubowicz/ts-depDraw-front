@@ -36,9 +36,55 @@ export const getOpenFileText = action$ =>
             return Rx.Observable.empty();
         });
 
+/** Dragonfly Epics */
+
+/**
+ * Gets the root token type, used as helper function.
+ */
+const chainGetRootTokenType = ({file, line, offset}) => 
+            ajax.getJSON(`http://localhost:${PORT}/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`)
+                .filter(data => {
+                    if (data && data.hasOwnProperty('success')){
+                        return data.success
+                    }
+                    return false;
+                })
+            .map(quickTypeInfo => quickTypeInfo.body)
+            .map(typeBody => ({
+                ...typeBody,
+                file: file
+        }));
+
+const openDragonflyEpic = actions$ =>
+    actions$.ofType(actions.OPEN_DRAGONFLY)
+        .do(_ => {
+            const dragonfly = document.getElementById("dragonFly");
+            dragonfly.style.display = "flex";
+        })
+        .mergeMap(_ => Rx.Observable.empty())
+
+const closeDragonflyEpic = actions$ =>
+    actions$.ofType(actions.CLOSE_DRAGONFLY)
+        .do(_ => {
+            const dragonfly = document.getElementById("dragonFly");
+            dragonfly.style.display = "none";
+        })
+        .mergeMap(_ => Rx.Observable.empty());
+
+const populateDragonflySelectedEpic = actions$ =>
+    actions$.ofType(actions.FETCH_SELECTED)
+        .mergeMap(chainGetRootTokenType)
+        .map(actions.populateDragonflySelectedToken);
+
+const dragonFlyEpics = combineEpics(
+    openDragonflyEpic,
+    closeDragonflyEpic,
+    populateDragonflySelectedEpic
+)
 
 export const rootEpic = combineEpics(
     getFileTextEpic,
     getOpenFileText,
-    rootD3Epics
+    rootD3Epics,
+    dragonFlyEpics
 )
