@@ -76,10 +76,17 @@ const populateDragonflySelectedEpic = actions$ =>
         .mergeMap(chainGetRootTokenType)
         .map(actions.populateDragonflySelectedToken);
 
+const populateDragonflyDepEpic = actions$ =>
+ actions$.ofType(actions.FETCH_DEPS)
+    .mergeMap(({file, line, offset}) =>
+        ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${file}&line=${line}&offset=${offset}`))
+    .map(actions.populateDragonflyDeps);
+
 const dragonFlyEpics = combineEpics(
     openDragonflyEpic,
     closeDragonflyEpic,
-    populateDragonflySelectedEpic
+    populateDragonflySelectedEpic,
+    populateDragonflyDepEpic
 )
 
 export const rootEpic = combineEpics(

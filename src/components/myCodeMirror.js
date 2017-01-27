@@ -66,6 +66,7 @@ const mapDispatchToProps = dispatch => {
             if (!window.cursorInD3){
                 dispatch(actions.openDragonfly());
                 dispatch(actions.fetchSelected(file, line, ch));
+                dispatch(actions.fetchDeps(file, line, ch));
                 // dispatch(actions.selectToken(file, line, ch));
                 // dispatch(actions.addD3TokenType(file,line,ch));
                 // dispatch(actions.addD3TokenDeps(file,line,ch));
