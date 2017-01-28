@@ -165,6 +165,10 @@ export const FETCH_DEPS = "FETCH_DEPS";
 export const FETCH_DEPNTS = "FETCH_DEPNTS";
 export const FETCH_SELECTED = "FETCH_SELECTED";
 
+export const UPDATE_LEFT_FILTER = "UPDATE_LEFT_FILTER";
+export const UPDATE_RIGHT_FILTER = "UPDATE_RIGHT_FILTER";
+export const EMPTY_FILTERS = "EMPTY_FILTERS";
+
 export const openDragonfly = () => ({
     type: OPEN_DRAGONFLY
 });
@@ -207,4 +211,18 @@ export const populateDragonflyDepnts = listOfDepnts => ({
 export const populateDragonflySelectedToken = selectedToken => ({
     type: POPULATE_DRAGONFLY_TOKEN,
     selectedToken
+});
+
+export const updateLeftFilter = text => ({
+    type: UPDATE_LEFT_FILTER,
+    text
+});
+
+export const updateRightFilter = text => ({
+    type: UPDATE_RIGHT_FILTER,
+    text
+});
+
+export const resetFilter = _ => ({
+    type: EMPTY_FILTERS
 });

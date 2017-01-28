@@ -23,15 +23,36 @@ div#dragonFly {
     position: relative;
     flex-grow: 1;
     flex-direction: column;
+    background-color: lightgray;
+    text-align: center;
 }
 
+#leftBox input {
+    width:95%;
+}
 #centreBox {
     flex-grow: 1.5;
-    border: 1px solid blue;
+    background-color: darkgrey;
 }
 
 #rightBox {
     position: relative;
     flex-grow: 1;
-    border: 1px solid red;
+    background-color: lightgray;
+    text-align: center;
+}
+
+#rightBox input {
+    width:95%;
+}
+
+.dropdownItem:nth-child(even){
+    background-color: #eaeaea;
+}
+.dropdownItem:nth-child(odd){
+    background-color: #f6f6f6;
+}
+.dropdownItem:hover {
+    background-color: #cccccc;
+    cursor: pointer;
 }

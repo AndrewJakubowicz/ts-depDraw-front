@@ -37,4 +37,5 @@ setTimeout(_ => {
 // Close the dragonfly if they click away from the codeMirror.
 window.addEventListener("click", e => {
   store.dispatch(actions.closeDragonfly());
+  store.dispatch(actions.resetFilter());
 })
