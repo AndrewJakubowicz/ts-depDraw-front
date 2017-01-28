@@ -74,7 +74,7 @@ const populateDragonflySelectedEpic = actions$ =>
     actions$.ofType(actions.FETCH_SELECTED)
         .mergeMap(chainGetRootTokenType)
         .mergeMap(token => {
-            const op = [actions.openDragonfly(), actions.populateDragonflySelectedToken(token), actions.fetchDeps(token.file, token.start.line, token.start.offset), actions.fetchDepnts(token.file, token.start.line, token.start.offset)];
+                const op = [actions.openDragonfly(), actions.populateDragonflySelectedToken(token), actions.fetchDeps(token.file, token.start.line, token.start.offset), actions.fetchDepnts(token.file, token.start.line, token.start.offset)];
             return Rx.Observable.from(op);
             });
 

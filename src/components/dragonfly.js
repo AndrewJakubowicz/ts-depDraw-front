@@ -39,7 +39,7 @@ const DragonFlyComponent = props => {
                 onClick={e => e.stopPropagation()}
                 onInputCapture = {e => props.leftInput(e.target.value)} />
             <div className="overflowy">
-                {populateList(props.leftList, (node) => props.addNode({source: node, target: props.centreData}))}
+                {populateList(props.leftList, (node) => props.addDepnt({source: node, target: props.centreData}))}
             </div>
         </div>
         <div id="centreBox">
@@ -55,7 +55,7 @@ const DragonFlyComponent = props => {
                 onClickCapture={e => e.stopPropagation()}
                 onInputCapture = {e => props.rightInput(e.target.value)} />
             <div className="overflowy">
-                {populateList(props.rightList, (node) => props.addNode({source: props.centreData, target: node}))}
+                {populateList(props.rightList, (node) => props.addDep({source: props.centreData, target: node}))}
             </div>
         </div>
     </div>
@@ -71,10 +71,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     leftInput: filterText => dispatch(actions.updateLeftFilter(filterText)),
     rightInput: filterText => dispatch(actions.updateRightFilter(filterText)),
-    addNode: ({source, target}) => {
-        dispatch(actions.addNode(source));
+    addDep: ({source, target}) => {
         dispatch(actions.addNode(target));
         dispatch(actions.addEdge({source, target}));
+        dispatch(actions.fetchSelected(target.file, target.start.line, target.start.offset))
+    },
+    addDepnt: ({source, target}) => {
+        dispatch(actions.addNode(source));
+        dispatch(actions.addEdge({source, target}));
+        dispatch(actions.fetchSelected(source.file, source.start.line, source.start.offset))
     },
     addSelectedNode: node => dispatch(actions.addNode(node))
 });
