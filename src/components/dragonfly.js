@@ -8,7 +8,7 @@ import * as actions from '../actions';
 
 import './dragonfly.css'
 
-const populateList = dropDownList => {
+const populateList = (dropDownList, callback) => {
     if (!(dropDownList && dropDownList.length !== 0)){
         return <span></span>
     }
@@ -16,6 +16,10 @@ const populateList = dropDownList => {
         <div
             key={hashNodeToString(v) + '-div'}
             className="dropdownItem"
+            onClick={e => {
+                e.stopPropagation();
+                callback(v);
+            }}
         >
             <span
                 key={hashNodeToString(v) + '-span'}
@@ -29,13 +33,13 @@ const populateList = dropDownList => {
 
 const DragonFlyComponent = props => {
     const attributes = {...(!(props.leftList)) && {style: {display: "none"}}};
-    return <div id = "dragonFly">
+    return <div id="dragonFly">
         <div id="leftBox" {...attributes} >
             <input
                 onClick={e => e.stopPropagation()}
                 onInputCapture = {e => props.leftInput(e.target.value)} />
             <div className="overflowy">
-                {populateList(props.leftList)}
+                {populateList(props.leftList, (node) => props.addNode({source: node, target: props.centreData}))}
             </div>
         </div>
         <div id="centreBox">
@@ -48,7 +52,7 @@ const DragonFlyComponent = props => {
                 onClickCapture={e => e.stopPropagation()}
                 onInputCapture = {e => props.rightInput(e.target.value)} />
             <div className="overflowy">
-                {populateList(props.rightList)}
+                {populateList(props.rightList, (node) => props.addNode({source: props.centreData, target: node}))}
             </div>
         </div>
     </div>
@@ -63,7 +67,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     leftInput: filterText => dispatch(actions.updateLeftFilter(filterText)),
-    rightInput: filterText => dispatch(actions.updateRightFilter(filterText))
+    rightInput: filterText => dispatch(actions.updateRightFilter(filterText)),
+    addNode: ({source, target}) => {
+        dispatch(actions.addNode(source));
+        dispatch(actions.addNode(target));
+        dispatch(actions.addEdge({source, target}));
+    }
 });
 
 export const DragonFly = connect(
