@@ -47,7 +47,6 @@ const chainGetRootTokenType = ({file, line, offset}) =>
                     if (data && data.hasOwnProperty('success')){
                         return data.success
                     }
-                    return false;
                 })
             .map(quickTypeInfo => quickTypeInfo.body)
             .map(typeBody => ({
@@ -74,7 +73,10 @@ const closeDragonflyEpic = actions$ =>
 const populateDragonflySelectedEpic = actions$ =>
     actions$.ofType(actions.FETCH_SELECTED)
         .mergeMap(chainGetRootTokenType)
-        .map(actions.populateDragonflySelectedToken);
+        .mergeMap(token => {
+            const op = [actions.openDragonfly(), actions.populateDragonflySelectedToken(token), actions.fetchDeps(token.file, token.start.line, token.start.offset), actions.fetchDepnts(token.file, token.start.line, token.start.offset)];
+            return Rx.Observable.from(op);
+            });
 
 const populateDragonflyDepEpic = actions$ =>
  actions$.ofType(actions.FETCH_DEPS)

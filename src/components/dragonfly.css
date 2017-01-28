@@ -39,6 +39,10 @@ div#dragonFly input {
 }
 #centreBox > div {
     background-color: darkgrey;
+    cursor: pointer;
+}
+#centreBox > div:hover {
+    background-color: #eeeeee;
 }
 
 #rightBox {

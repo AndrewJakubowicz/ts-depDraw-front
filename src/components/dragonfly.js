@@ -43,7 +43,10 @@ const DragonFlyComponent = props => {
             </div>
         </div>
         <div id="centreBox">
-            <div>
+            <div onClick={e => {
+                e.stopPropagation();
+                props.addSelectedNode(props.centreData);
+            }}>
                 <p>{props.centreData.displayString}</p>
             </div>
         </div>
@@ -72,7 +75,8 @@ const mapDispatchToProps = dispatch => ({
         dispatch(actions.addNode(source));
         dispatch(actions.addNode(target));
         dispatch(actions.addEdge({source, target}));
-    }
+    },
+    addSelectedNode: node => dispatch(actions.addNode(node))
 });
 
 export const DragonFly = connect(
