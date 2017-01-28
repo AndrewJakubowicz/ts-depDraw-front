@@ -33,7 +33,7 @@ const DragonFlyComponent = props => {
         <div id="leftBox" {...attributes} >
             <input
                 onClick={e => e.stopPropagation()}
-                onInputCapture = {e => props.leftInput(e.target.value)}></input>
+                onInputCapture = {e => props.leftInput(e.target.value)} />
             {populateList(props.leftList)}
         </div>
         <div id="centreBox">
@@ -42,7 +42,7 @@ const DragonFlyComponent = props => {
         <div id="rightBox">
             <input
                 onClickCapture={e => e.stopPropagation()}
-                onInputCapture = {e => props.rightInput(e.target.value)}></input>
+                onInputCapture = {e => props.rightInput(e.target.value)} />
             {populateList(props.rightList)}
         </div>
     </div>
