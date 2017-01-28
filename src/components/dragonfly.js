@@ -34,16 +34,22 @@ const DragonFlyComponent = props => {
             <input
                 onClick={e => e.stopPropagation()}
                 onInputCapture = {e => props.leftInput(e.target.value)} />
-            {populateList(props.leftList)}
+            <div className="overflowy">
+                {populateList(props.leftList)}
+            </div>
         </div>
         <div id="centreBox">
-            <p>{props.centreData.displayString}</p>
+            <div>
+                <p>{props.centreData.displayString}</p>
+            </div>
         </div>
         <div id="rightBox">
             <input
                 onClickCapture={e => e.stopPropagation()}
                 onInputCapture = {e => props.rightInput(e.target.value)} />
-            {populateList(props.rightList)}
+            <div className="overflowy">
+                {populateList(props.rightList)}
+            </div>
         </div>
     </div>
 }

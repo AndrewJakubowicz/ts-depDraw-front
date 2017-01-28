@@ -3,7 +3,7 @@
 div#dragonFly {
     position: absolute;
     width: 500px;
-    height: 80px;
+    height: 30px;
     margin-left: auto;
     margin-right: auto;
     left: 0;
@@ -17,9 +17,10 @@ div#dragonFly {
     z-index: 1000;
 }
 
-/*<div classID="leftBox"></div>
-            <div classID="centreBox"></div>
-            <div classID="rightBox"></div>*/
+div#dragonFly input {
+    margin: 5px 0 5px 0;
+}
+
 #leftBox {
     position: relative;
     flex-grow: 1;
@@ -33,6 +34,10 @@ div#dragonFly {
 }
 #centreBox {
     flex-grow: 1.5;
+    min-width: 100px;
+    text-align: center;
+}
+#centreBox > div {
     background-color: darkgrey;
 }
 
@@ -56,4 +61,9 @@ div#dragonFly {
 .dropdownItem:hover {
     background-color: #cccccc;
     cursor: pointer;
+}
+
+.overflowy {
+    overflow-y: auto;
+    max-height: 300px;
 }
