@@ -47,8 +47,14 @@ const DragonFlyComponent = props => {
                 e.stopPropagation();
                 props.addSelectedNode(props.centreData);
             }}>
-                <p>{props.centreData.displayString}</p>
+                <span>{props.centreData.kind}<br /></span>
+                <span>{props.centreData.displayString}</span>
             </div>
+            <ul>
+                <li>TAIL ATTEMPT</li>
+                <li>LOOK AT TAIL </li>
+                <li>more tail</li>
+            </ul>
         </div>
         <div id="rightBox">
             <input

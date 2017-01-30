@@ -34,7 +34,7 @@ div#dragonFly input {
 }
 #centreBox {
     flex-grow: 1.5;
-    min-width: 100px;
+    min-width: 200px;
     text-align: center;
 }
 #centreBox > div {
@@ -71,3 +71,28 @@ div#dragonFly input {
     overflow-y: auto;
     max-height: 300px;
 }
+
+#centreBox * {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#centreBox > ul li:nth-child(even) {
+    background-color: #eaeaea;
+}
+#centreBox > ul li:nth-child(odd) {
+    background-color: #f6f6f6;
+}
+
+#centreBox {
+    position: relative;
+}
+
+#centreBox ul {
+    position: absolute;
+    bottom:100%;
+    text-align: center;
+    width: 100%;
+}
+
