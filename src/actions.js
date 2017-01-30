@@ -148,3 +148,81 @@ export const removeNode = node => ({
     type: REMOVE_NODE,
     node
 });
+
+
+/**
+ * DRAGONFLY
+ */
+
+export const OPEN_DRAGONFLY = "OPEN_DRAGONFLY";
+export const CLOSE_DRAGONFLY = "CLOSE_DRAGONFLY";
+
+export const POPULATE_DRAGONFLY_DEPS = "POPULATE_DRAGONFLY_DEPS";
+export const POPULATE_DRAGONFLY_DEPNTS = "POPULATE_DRAGONFLY_DEPNTS";
+export const POPULATE_DRAGONFLY_TOKEN = "POPULATE_DRAGONFLY_TOKEN";
+
+export const FETCH_DEPS = "FETCH_DEPS";
+export const FETCH_DEPNTS = "FETCH_DEPNTS";
+export const FETCH_SELECTED = "FETCH_SELECTED";
+
+export const UPDATE_LEFT_FILTER = "UPDATE_LEFT_FILTER";
+export const UPDATE_RIGHT_FILTER = "UPDATE_RIGHT_FILTER";
+export const EMPTY_FILTERS = "EMPTY_FILTERS";
+
+export const openDragonfly = () => ({
+    type: OPEN_DRAGONFLY
+});
+
+export const closeDragonfly = () => ({
+    type: CLOSE_DRAGONFLY
+});
+
+export const fetchSelected = (file, line, offset) => ({
+    type: FETCH_SELECTED,
+    file,
+    line,
+    offset
+});
+
+export const fetchDeps = (file, line, offset) => ({
+    type: FETCH_DEPS,
+    file,
+    line,
+    offset
+});
+
+export const fetchDepnts = (file, line, offset) => ({
+    type: FETCH_DEPNTS,
+    file,
+    line,
+    offset
+});
+
+export const populateDragonflyDeps = listOfDeps => ({
+    type: POPULATE_DRAGONFLY_DEPS,
+    listOfDeps
+});
+
+export const populateDragonflyDepnts = listOfDepnts => ({
+    type: POPULATE_DRAGONFLY_DEPNTS,
+    listOfDepnts
+});
+
+export const populateDragonflySelectedToken = selectedToken => ({
+    type: POPULATE_DRAGONFLY_TOKEN,
+    selectedToken
+});
+
+export const updateLeftFilter = text => ({
+    type: UPDATE_LEFT_FILTER,
+    text
+});
+
+export const updateRightFilter = text => ({
+    type: UPDATE_RIGHT_FILTER,
+    text
+});
+
+export const resetFilter = _ => ({
+    type: EMPTY_FILTERS
+});

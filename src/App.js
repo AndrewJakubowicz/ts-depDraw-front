@@ -3,6 +3,7 @@ import './App.css';
 
 import {CodeDisplayEditor} from './components/myCodeMirror';
 import {OpenFileTabs} from './components/fileTabs';
+import {DragonFly} from './components/dragonfly';
 
 
 
@@ -11,8 +12,9 @@ class App extends Component {
     return (
       <div className="App flexbox">
         <div className="row content"></div>
-       <OpenFileTabs />
-       <CodeDisplayEditor />
+        <DragonFly />
+        <OpenFileTabs />
+        <CodeDisplayEditor />
       </div>
     );
   }
