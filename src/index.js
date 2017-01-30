@@ -14,6 +14,15 @@ import * as actions from './actions';
 import {rootReducer} from './reducers';
 import {rootEpic} from './epics';
 
+
+// MATERIAL UI DEPENDENCIES
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
+
+
 // // D3
 // var d3Graph = require('./components/d3Graph')();
 
@@ -24,7 +33,9 @@ let store = createStore(rootReducer,
 window.store = store;
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <MuiThemeProvider>
+      <App />
+    </MuiThemeProvider>
   </Provider>,
   document.getElementById('root')
 );

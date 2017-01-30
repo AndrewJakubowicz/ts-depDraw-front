@@ -1,5 +1,9 @@
 import {connect} from 'react-redux';
 import React from 'react'
+import RaisedButton from 'material-ui/RaisedButton';
+
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import {grey700, grey900} from 'material-ui/styles/colors';
 
 import {getOpenFileList} from '../reducers';
 import * as actions from '../actions';
@@ -10,8 +14,17 @@ const OpenFileTabsComponent = React.createClass({
     render: function(){
         return <ul className="fileTabs">
             {this.props.openFilesList.map(({fileName, openInEditor}) => 
-                    <li key={fileName + '-li'} onClick={() => {this.props.clickFileTab(fileName, openInEditor)}}
-                    className={openInEditor ? "selected" : ""}>{fileName} <sup key={fileName + '-sup'} onClick={(event)=>{this.props.closeFileTab(event, fileName, openInEditor, this.props.openFilesList)}}>x</sup></li>
+                    <RaisedButton key={fileName + '-li'} onClick={() => {this.props.clickFileTab(fileName, openInEditor)}}
+                    disabled={openInEditor ? true : false}
+                    >{' ' + fileName + ' '}
+                    <sup key={fileName + '-sup'}
+                        onClick={(event)=>{
+                        this.props.closeFileTab(event, fileName, openInEditor, this.props.openFilesList)
+                        event.stopPropagation();
+                    }}>
+                    <NavigationClose color={grey700} hoverColor={grey900} />
+                    </sup>
+                    </RaisedButton>
                 )}
         </ul>
     }
