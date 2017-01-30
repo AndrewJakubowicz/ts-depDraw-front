@@ -1,6 +1,8 @@
 import {connect} from 'react-redux';
 import React from 'react'
 import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
+import Badge from 'material-ui/Badge';
 
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import {grey700, grey900} from 'material-ui/styles/colors';
@@ -14,17 +16,25 @@ const OpenFileTabsComponent = React.createClass({
     render: function(){
         return <ul className="fileTabs">
             {this.props.openFilesList.map(({fileName, openInEditor}) => 
-                    <RaisedButton key={fileName + '-li'} onClick={() => {this.props.clickFileTab(fileName, openInEditor)}}
+                    <Badge
+                        key={fileName + '-badge'}
+                        badgeContent={
+                            <IconButton key={fileName + '-iconButton'} tooltip="Close Tab">
+                            <NavigationClose key={fileName + '-icon'} color={grey700} hoverColor={grey900}
+                            onClick={(event)=>{
+                                this.props.closeFileTab(event, fileName, openInEditor, this.props.openFilesList)
+                                event.stopPropagation();
+                            }}
+                            />
+                            </IconButton>
+                            }
+                    >
+                    <RaisedButton key={fileName + '-button'} onClick={() => {this.props.clickFileTab(fileName, openInEditor)}}
                     disabled={openInEditor ? true : false}
-                    >{' ' + fileName + ' '}
-                    <sup key={fileName + '-sup'}
-                        onClick={(event)=>{
-                        this.props.closeFileTab(event, fileName, openInEditor, this.props.openFilesList)
-                        event.stopPropagation();
-                    }}>
-                    <NavigationClose color={grey700} hoverColor={grey900} />
-                    </sup>
+                    ><span className="tab-text">{fileName}</span>
                     </RaisedButton>
+
+                    </Badge>
                 )}
         </ul>
     }
