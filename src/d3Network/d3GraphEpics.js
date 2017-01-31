@@ -151,7 +151,7 @@ const addAllTokenDependentsEpic = actions$ =>
             return Rx.Observable.empty();
         });
 
-const focusTokenTextEpic = actions$ =>
+const focusTokenTextEpic = (actions$, store) =>
     actions$.ofType(actions.FOCUS_TOKEN_CLICKED)
         .mergeMap(({file,
             openFile,
@@ -163,7 +163,9 @@ const focusTokenTextEpic = actions$ =>
                     opList.push(actions.addOpenFileName(file));
                     opList.push(actions.getTextForOpenFile(file))
                 }
-                opList.push(actions.highlightCodeMirrorRegion(codeMirrorInstance, anchor, head));
+                setTimeout(() => {store.dispatch(actions.highlightCodeMirrorRegion(codeMirrorInstance, anchor, head))},
+                180)
+                
                 return Rx.Observable.from(opList)
             })
             .catch(err => {
