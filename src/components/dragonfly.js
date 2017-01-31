@@ -39,50 +39,75 @@ const populateList = (dropDownList, callback) => {
 }
 
 
-const DragonFlyComponent = props => {
-    const attributes = {...(!(props.leftList)) && {style: {display: "none"}}};
-    return <div id="dragonFly">
-        <div id="leftBox" {...attributes} >
-            <Paper zDepth={2}>
+const DragonFlyComponent =  React.createClass ({
+    componentWillReceiveProps: function(){
+
+    },
+    render: function() {
+        const props = this.props;
+        const attributes = {...(!(props.leftList)) && {style: {display: "none"}}};
+        return (<div id="dragonFly">
+            <div id="leftBox" {...attributes} >
+                <Paper zDepth={2}>
+                    <TextField
+                        style={textInputStyles}
+                        hintText="Filter dependents"
+
+                        onClick={e => e.stopPropagation()}
+                        onInputCapture = {e => props.leftInput(e.target.value)}
+                        ref={this.setRefLeft}
+                        />
+                    <List className="overflowy">
+                        {populateList(props.leftList, node => props.addDepnt({source: node, target: props.centreData}))}
+                    </List>
+                </Paper>
+            </div>
+            <div id="centreBox">
+                    <Paper zDepth={4}>
+                    <div onClick={e => {
+                        e.stopPropagation();
+                        props.addSelectedNode(props.centreData);
+                    }}>
+                        <span>{props.centreData.kind}<br /></span>
+                        <span>{props.centreData.displayString}</span>
+                    </div>
+                    </Paper>
+                    <div id="dependency-list">
+                        <Paper>
+                        <List>
+                            <ListItem>TAIL ATTEMPT</ListItem>
+                            <ListItem>LOOK AT TAIL </ListItem>
+                            <ListItem>more tail</ListItem>
+                        </List>
+                        </Paper>
+                    </div>
+                    <div id="dep-group-list">
+                        <Paper>
+                        <List>
+                            <ListItem>Where we group the dependencies</ListItem>
+                            <ListItem>LOOK AT TAIL </ListItem>
+                            <ListItem>more tail</ListItem>
+                        </List>
+                        </Paper>
+                    </div>
+            </div>
+            <div id="rightBox">
+                <Paper zDepth={2}>
                 <TextField
                     style={textInputStyles}
-                    hintText="Filter dependents"
-
-                    onClick={e => e.stopPropagation()}
-                    onInputCapture = {e => props.leftInput(e.target.value)} />
+                    hintText="Filter dependencies"
+                    onClickCapture={e => e.stopPropagation()}
+                    onInputCapture = {e => props.rightInput(e.target.value)}
+                    ref={this.setRefRight}
+                    />
                 <List className="overflowy">
-                    {populateList(props.leftList, (node) => props.addDepnt({source: node, target: props.centreData}))}
+                    {populateList(props.rightList, (node) => props.addDep({source: props.centreData, target: node}))}
                 </List>
-            </Paper>
-        </div>
-        <div id="centreBox">
-                <div onClick={e => {
-                    e.stopPropagation();
-                    props.addSelectedNode(props.centreData);
-                }}>
-                    <span>{props.centreData.kind}<br /></span>
-                    <span>{props.centreData.displayString}</span>
-                </div>
-                <ul>
-                    <li>TAIL ATTEMPT</li>
-                    <li>LOOK AT TAIL </li>
-                    <li>more tail</li>
-                </ul>
-        </div>
-        <div id="rightBox">
-            <Paper zDepth={2}>
-            <TextField
-                style={textInputStyles}
-                hintText="Filter dependencies"
-                onClickCapture={e => e.stopPropagation()}
-                onInputCapture = {e => props.rightInput(e.target.value)} />
-            <List className="overflowy">
-                {populateList(props.rightList, (node) => props.addDep({source: props.centreData, target: node}))}
-            </List>
-            </Paper>
-        </div>
-    </div>
-}
+                </Paper>
+            </div>
+        </div>)
+    }
+})
 
 
 const mapStateToProps = state => ({

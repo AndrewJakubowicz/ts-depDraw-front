@@ -38,7 +38,6 @@ div#dragonFly input {
     text-align: center;
 }
 #centreBox > div {
-    background-color: darkgrey;
     cursor: pointer;
 }
 #centreBox > div:hover {
@@ -56,17 +55,6 @@ div#dragonFly input {
     width:95%;
 }
 
-.dropdownItem:nth-child(even){
-    background-color: #eaeaea;
-}
-.dropdownItem:nth-child(odd){
-    background-color: #f6f6f6;
-}
-.dropdownItem:hover {
-    background-color: #cccccc;
-    cursor: pointer;
-}
-
 .overflowy {
     overflow-y: auto;
     max-height: 300px;
@@ -78,18 +66,11 @@ div#dragonFly input {
     margin: 0;
 }
 
-#centreBox > ul li:nth-child(even) {
-    background-color: #eaeaea;
-}
-#centreBox > ul li:nth-child(odd) {
-    background-color: #f6f6f6;
-}
-
 #centreBox {
     position: relative;
 }
 
-#centreBox ul {
+#centreBox > #dependency-list {
     position: absolute;
     bottom:100%;
     text-align: center;

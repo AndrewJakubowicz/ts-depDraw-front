@@ -169,6 +169,7 @@ export const UPDATE_LEFT_FILTER = "UPDATE_LEFT_FILTER";
 export const UPDATE_RIGHT_FILTER = "UPDATE_RIGHT_FILTER";
 export const EMPTY_FILTERS = "EMPTY_FILTERS";
 
+
 export const openDragonfly = () => ({
     type: OPEN_DRAGONFLY
 });
