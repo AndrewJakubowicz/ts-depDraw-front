@@ -127,6 +127,9 @@ const filterStringsReducer = (state = {leftFilter: "", rightFilter: ""}, action)
     }
 }
 
+export const getLeftFilterText = ({filters: {leftFilter}}) => leftFilter;
+export const getRightFilterText = ({filters: {rightFilter}}) => rightFilter;
+
 /**
  * assuming dependencies are the right filter.
  */

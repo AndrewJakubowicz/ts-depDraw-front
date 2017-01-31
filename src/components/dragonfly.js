@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField';
 
 import {hashNodeToString} from '../d3Network/util/hashNode';
 
-import {getFocussedTokenFromState, getFilteredDependencies, getFilteredDependents} from '../reducers';
+import {getFocussedTokenFromState, getFilteredDependencies, getFilteredDependents, getLeftFilterText, getRightFilterText} from '../reducers';
 import * as actions from '../actions';
 
 import './dragonfly.css'
@@ -40,9 +40,6 @@ const populateList = (dropDownList, callback) => {
 
 
 const DragonFlyComponent =  React.createClass ({
-    componentWillReceiveProps: function(){
-
-    },
     render: function() {
         const props = this.props;
         const attributes = {...(!(props.leftList)) && {style: {display: "none"}}};
@@ -55,7 +52,8 @@ const DragonFlyComponent =  React.createClass ({
 
                         onClick={e => e.stopPropagation()}
                         onInputCapture = {e => props.leftInput(e.target.value)}
-                        ref={this.setRefLeft}
+                        value={props.leftFilterField}
+
                         />
                     <List className="overflowy">
                         {populateList(props.leftList, node => props.addDepnt({source: node, target: props.centreData}))}
@@ -98,7 +96,7 @@ const DragonFlyComponent =  React.createClass ({
                     hintText="Filter dependencies"
                     onClickCapture={e => e.stopPropagation()}
                     onInputCapture = {e => props.rightInput(e.target.value)}
-                    ref={this.setRefRight}
+                    value={props.rightFilterField}
                     />
                 <List className="overflowy">
                     {populateList(props.rightList, (node) => props.addDep({source: props.centreData, target: node}))}
@@ -113,7 +111,9 @@ const DragonFlyComponent =  React.createClass ({
 const mapStateToProps = state => ({
     leftList: getFilteredDependents(state),
     rightList: getFilteredDependencies(state),
-    centreData: getFocussedTokenFromState(state)
+    centreData: getFocussedTokenFromState(state),
+    leftFilterField: getLeftFilterText(state),
+    rightFilterField: getRightFilterText(state)
 });
 
 const mapDispatchToProps = dispatch => ({

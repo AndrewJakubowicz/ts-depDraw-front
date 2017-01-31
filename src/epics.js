@@ -60,7 +60,7 @@ const openDragonflyEpic = actions$ =>
             const dragonfly = document.getElementById("dragonFly");
             dragonfly.style.display = "flex";
         })
-        .mergeMap(_ => Rx.Observable.empty())
+        .map(actions.resetFilter);
 
 const closeDragonflyEpic = actions$ =>
     actions$.ofType(actions.CLOSE_DRAGONFLY)
