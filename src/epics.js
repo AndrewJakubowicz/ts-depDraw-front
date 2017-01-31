@@ -8,7 +8,7 @@ import {rootD3Epics} from './d3Network/d3GraphEpics';
 const {ajax} = Rx.Observable;
 const PORT = 8080;
 
-export const getFileTextEpic = action$ =>
+export const getFileTextEpic = (action$) =>
     action$.ofType(actions.FETCH_FILE_TEXT)
         .mergeMap(action => 
             (action.file
@@ -24,7 +24,7 @@ export const getFileTextEpic = action$ =>
         });
 
 // For getting text for files that are already open.
-export const getOpenFileText = action$ =>
+export const getOpenFileText = (action$) =>
     action$.ofType(actions.GET_TEXT_FOR_OPEN_FILE)
         .throttleTime(200)
         .mergeMap(action => 
@@ -52,7 +52,11 @@ const chainGetRootTokenType = ({file, line, offset}) =>
             .map(typeBody => ({
                 ...typeBody,
                 file: file
-        }));
+        }))
+        .catch(err => {
+            console.error(`Error in chainGetRootTokenType:`, err);
+            return Rx.Observable.empty();
+        });
 
 const openDragonflyEpic = actions$ =>
     actions$.ofType(actions.OPEN_DRAGONFLY)
@@ -60,7 +64,12 @@ const openDragonflyEpic = actions$ =>
             const dragonfly = document.getElementById("dragonFly");
             dragonfly.style.display = "flex";
         })
-        .map(actions.resetFilter);
+        .map(actions.resetFilter)
+        .catch(err => {
+            console.error(`Error in openDragonflyEpic:`, err);
+            return Rx.Observable.empty();
+        });
+        
 
 const closeDragonflyEpic = actions$ =>
     actions$.ofType(actions.CLOSE_DRAGONFLY)
@@ -68,7 +77,11 @@ const closeDragonflyEpic = actions$ =>
             const dragonfly = document.getElementById("dragonFly");
             dragonfly.style.display = "none";
         })
-        .mergeMap(_ => Rx.Observable.empty());
+        .mergeMap(_ => Rx.Observable.empty())
+        .catch(err => {
+            console.error(`Error in closeDragonflyEpic:`, err);
+            return Rx.Observable.empty();
+        });
 
 const populateDragonflySelectedEpic = actions$ =>
     actions$.ofType(actions.FETCH_SELECTED)
@@ -76,19 +89,32 @@ const populateDragonflySelectedEpic = actions$ =>
         .mergeMap(token => {
                 const op = [actions.openDragonfly(), actions.populateDragonflySelectedToken(token), actions.fetchDeps(token.file, token.start.line, token.start.offset), actions.fetchDepnts(token.file, token.start.line, token.start.offset)];
             return Rx.Observable.from(op);
-            });
+            })
+        .catch(err => {
+            console.error(`Error in populateDragonflySelectedEpic:`, err);
+            return Rx.Observable.empty();
+        });
+            
 
 const populateDragonflyDepEpic = actions$ =>
  actions$.ofType(actions.FETCH_DEPS)
     .mergeMap(({file, line, offset}) =>
         ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${file}&line=${line}&offset=${offset}`))
-    .map(actions.populateDragonflyDeps);
+    .map(actions.populateDragonflyDeps)
+    .catch(err => {
+        console.error(`Error in populateDragonflyDepEpic:`, err);
+        return Rx.Observable.empty();
+    });
 
 const populateDragonflyDepntsEpic = actions$ =>
  actions$.ofType(actions.FETCH_DEPNTS)
     .mergeMap(({file, line, offset}) =>
         ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependents?filePath=${file}&line=${line}&offset=${offset}`))
-    .map(actions.populateDragonflyDepnts);
+    .map(actions.populateDragonflyDepnts)
+    .catch(err => {
+        console.error(`Error in populateDragonflyDepntsEpic:`, err);
+        return Rx.Observable.empty();
+    });
 
 const dragonFlyEpics = combineEpics(
     openDragonflyEpic,

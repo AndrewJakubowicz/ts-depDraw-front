@@ -29,7 +29,11 @@ const addNodeEpic = action$ =>
         .filter(action => !(NODESTORE.has(hashNodeToString(action.node))))
         .do(action => NODESTORE.set(hashNodeToString(action.node), JSON.parse(JSON.stringify(action.node))))
         .do(action => d3Graph.pushNode(NODESTORE.get(hashNodeToString(action.node))))
-        .mergeMap(_ => Rx.Observable.empty());
+        .mergeMap(_ => Rx.Observable.empty())
+        .catch(err => {
+            console.error(`Error in addNodeEpic:`, err);
+            return Rx.Observable.empty();
+        });
 
 /**
  * Both nodes need to exist otherwise the operation cancels.
@@ -47,7 +51,11 @@ const addEdgeEpic = action$ =>
                      target: NODESTORE.get(target)})
                      || true)
                 ||  console.error("Those nodes don't exist!!!"))
-        .mergeMap(_ => Rx.Observable.empty());
+        .mergeMap(_ => Rx.Observable.empty())
+        .catch(err => {
+            console.error(`Error in addEdgeEpic:`, err);
+            return Rx.Observable.empty();
+        });
 
 /**
  * This will also remove all the edges associated with that node.
@@ -59,7 +67,11 @@ const removeNodeEpic = actions$ =>
                     && d3Graph.removeNode(node)
                     || console.error("Error removing node")
             )
-        .mergeMap(_ => Rx.Observable.empty());
+        .mergeMap(_ => Rx.Observable.empty())
+        .catch(err => {
+            console.error(`Error in removeNodeEpic:`, err);
+            return Rx.Observable.empty();
+        });
 
 
 const addTokenTypeEpic = actions$ =>
@@ -99,7 +111,11 @@ const chainGetRootTokenType = ({file, line, offset}) =>
             .map(typeBody => ({
                 ...typeBody,
                 file: file
-        }));
+        }))
+        .catch(err => {
+            console.error(`Error in chainGetRootTokenType:`, err);
+            return Rx.Observable.empty();
+        });
 
 /**
  * Adds all the token dependency nodes and edges.
@@ -113,7 +129,11 @@ const addAllTokenDependenciesEpic = actions$ =>
                                         source: v,
                                         target: deps})))
         ).flatMap(v => v)
-        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]));
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]))
+        .catch(err => {
+            console.error(`Error in addAllTokenDependenciesEpic:`, err);
+            return Rx.Observable.empty();
+        });
 
 const addAllTokenDependentsEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_TOKEN_DEPNDTS)
@@ -125,7 +145,11 @@ const addAllTokenDependentsEpic = actions$ =>
                                         target: v})))
         )
         .flatMap(v => v)
-        .flatMap(v => Rx.Observable.from([actions.addNode(v.source), actions.addEdge(v)]));
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.source), actions.addEdge(v)]))
+        .catch(err => {
+            console.error(`Error in addAllTokenDependentsEpic:`, err);
+            return Rx.Observable.empty();
+        });
 
 const focusTokenTextEpic = actions$ =>
     actions$.ofType(actions.FOCUS_TOKEN_CLICKED)
@@ -141,6 +165,10 @@ const focusTokenTextEpic = actions$ =>
                 }
                 opList.push(actions.highlightCodeMirrorRegion(codeMirrorInstance, anchor, head));
                 return Rx.Observable.from(opList)
+            })
+            .catch(err => {
+                console.error(`Error in focusTokenTextEpic:`, err);
+                return Rx.Observable.empty();
             });
 const highlightCodeMirrorRegionEpic = actions$ =>
     actions$.ofType(actions.HIGHLIGHT_CODEMIRROR_REGION)
@@ -148,7 +176,11 @@ const highlightCodeMirrorRegionEpic = actions$ =>
             codeMirrorInstance.setSelection({line: anchor.line - 1, ch: anchor.offset - 1},
                                     {line: head.line - 1, ch: head.offset - 1})
         })
-        .mergeMap(() => Rx.Observable.empty());
+        .mergeMap(() => Rx.Observable.empty())
+        .catch(err => {
+            console.error(`Error in highlightCodeMirrorRegionEpic:`, err);
+            return Rx.Observable.empty();
+        });
 
 export const rootD3Epics = combineEpics(
     addNodeEpic,
