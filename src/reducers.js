@@ -78,8 +78,12 @@ export const getOpenFilename = state => {
 
 /**
  * Dependency list and dependent list.
+ * Head is up and tail is down.
+ * Across the dragonfly the arrow for "depends on" is ->
+ * With the head and tail the "depends on" arrow is down.
+ * The head depends on the tail.
  */
-const linkedTokenReducer = (state = {deps: [], depnts: [], selectedToken: {}}, action) => {
+const linkedTokenReducer = (state = {deps: [], depnts: [], selectedToken: {}, tail: []}, action) => {
     switch (action.type){
         case actions.POPULATE_DRAGONFLY_TOKEN:
             return {
@@ -96,6 +100,16 @@ const linkedTokenReducer = (state = {deps: [], depnts: [], selectedToken: {}}, a
                 ...state,
                 depnts: action.listOfDepnts
             };
+        case actions.ADD_NODE_HISTORY:
+            return {
+                ...state,
+                tail: [...state.tail, {...action.node, isDep: action.isDependency} ],
+            };
+        case actions.CLEAR_TAIL_HISTORY:
+            return {
+                ...state,
+                tail: []
+            }
         default:
             return state;
     }
@@ -104,6 +118,8 @@ const linkedTokenReducer = (state = {deps: [], depnts: [], selectedToken: {}}, a
 export const getDependenciesFromState = state => state.linkedTokens.deps;
 export const getDependentsFromState = state => state.linkedTokens.depnts;
 export const getFocussedTokenFromState = state => state.linkedTokens.selectedToken;
+export const getDragonflyTail = state => state.linkedTokens.tail;
+
 
 const filterStringsReducer = (state = {leftFilter: "", rightFilter: ""}, action) => {
     switch (action.type){
@@ -129,6 +145,9 @@ const filterStringsReducer = (state = {leftFilter: "", rightFilter: ""}, action)
 
 export const getLeftFilterText = ({filters: {leftFilter}}) => leftFilter;
 export const getRightFilterText = ({filters: {rightFilter}}) => rightFilter;
+
+
+
 
 /**
  * assuming dependencies are the right filter.
@@ -167,10 +186,39 @@ export const getFilteredDependents = ({filters: {leftFilter}, linkedTokens: {dep
     , depnts)
 }
 
+
+const unplayedNodeHistoryReducer = (state = [], action) => {
+    switch (action.type){
+        case actions.ADD_D3_MUTATION_HISTORY:
+            return [...state, action.actionPayload];
+        case actions.CLEAR_D3_UNPLAYED_HISTORY:
+            return [];
+        default:
+            return state;
+    }
+}
+export const getUnplayedMutations = state => state.unplayedHistory;
+
+/**
+ * This reducer only saves actions that it's told to save.
+ */
+const historyD3Reducer = (state = [], action) => {
+    switch(action.type){
+        case actions.ADD_NODE:
+        case actions.ADD_EDGE:
+        case actions.REMOVE_NODE:
+            return [...state, action]
+        default:
+            return state;
+    }
+}
+
 // rootReducer is the base of the store.
 export const rootReducer = combineReducers({
     openFileText: fileTextReducer,
     openFileList: openFileListReducer,
     linkedTokens: linkedTokenReducer,
-    filters: filterStringsReducer
+    filters: filterStringsReducer,
+    unplayedHistory: unplayedNodeHistoryReducer,
+    D3history: historyD3Reducer
 });

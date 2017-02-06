@@ -3,6 +3,7 @@ import { combineEpics } from 'redux-observable';
 
 import * as actions from '../actions';
 import {hashNodeToString} from './util/hashNode';
+import * as s from '../reducers';
 
 // D3
 var d3Graph = require('./d3Graph');
@@ -151,6 +152,9 @@ const addAllTokenDependentsEpic = actions$ =>
             return Rx.Observable.empty();
         });
 
+
+
+
 const focusTokenTextEpic = (actions$, store) =>
     actions$.ofType(actions.FOCUS_TOKEN_CLICKED)
         .mergeMap(({file,
@@ -184,6 +188,13 @@ const highlightCodeMirrorRegionEpic = actions$ =>
             return Rx.Observable.empty();
         });
 
+const applyD3MutationsEpic = (actions$, store) =>
+    actions$.ofType(actions.APPLY_D3_MUTATION_HISTORY)
+        .mergeMap(_ => {
+            return Rx.Observable.from([actions.clearD3UnplayedHistory(), ...s.getUnplayedMutations(store.getState())])
+        });
+
+
 export const rootD3Epics = combineEpics(
     addNodeEpic,
     addEdgeEpic,
@@ -192,5 +203,6 @@ export const rootD3Epics = combineEpics(
     addAllTokenDependenciesEpic,
     addAllTokenDependentsEpic,
     focusTokenTextEpic,
-    highlightCodeMirrorRegionEpic
+    highlightCodeMirrorRegionEpic,
+    applyD3MutationsEpic
 )

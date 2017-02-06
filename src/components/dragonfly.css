@@ -77,3 +77,8 @@ div#dragonFly input {
     width: 100%;
 }
 
+.tail {
+    position: relative;
+    background-color: rgb(238,238,238);
+}
+

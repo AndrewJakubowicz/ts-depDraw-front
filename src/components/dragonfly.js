@@ -6,7 +6,8 @@ import TextField from 'material-ui/TextField';
 
 import {hashNodeToString} from '../d3Network/util/hashNode';
 
-import {getFocussedTokenFromState, getFilteredDependencies, getFilteredDependents, getLeftFilterText, getRightFilterText} from '../reducers';
+import {getFocussedTokenFromState, getFilteredDependencies, getFilteredDependents, getLeftFilterText, getRightFilterText,
+    getDragonflyTail} from '../reducers';
 import * as actions from '../actions';
 
 import './dragonfly.css'
@@ -16,13 +17,13 @@ const textInputStyles = {
 }
 
 
-const populateList = (dropDownList, callback) => {
+const populateList = (dropDownList, callback, uniqueKey) => {
     if (!(dropDownList && dropDownList.length !== 0)){
         return <span></span>
     }
     return dropDownList.map(v => (
         <ListItem
-            key={hashNodeToString(v) + '-ListItem'}
+            key={hashNodeToString(v) + '-ListItem' + uniqueKey}
             className="dropdownItem"
             onClick={e => {
                 e.stopPropagation();
@@ -30,7 +31,7 @@ const populateList = (dropDownList, callback) => {
             }}
         >
             <span
-                key={hashNodeToString(v) + '-span'}
+                key={hashNodeToString(v) + '-span' + uniqueKey}
             >
                 {v.kind + ',' + v.displayString + ',' + v.file}
             </span>
@@ -38,9 +39,33 @@ const populateList = (dropDownList, callback) => {
     ));
 }
 
+const populateTail = (dropDownList) => {
+    if (!(dropDownList && dropDownList.length !== 0)){
+        return <span></span>
+    }
+    let currentOffset = 0;
+    return dropDownList.map(v => {
+        if (v.isDep) {
+            currentOffset += 5;
+        } else {
+            currentOffset -= 5;
+        }
+        return (<div
+            key={hashNodeToString(v) + '-ListItem' + Math.random()}
+            className="tail"
+            style={{left: currentOffset + 'px'}}
+        >
+            <span
+                key={hashNodeToString(v) + '-span' + Math.random()}
+            >
+                {v.kind + ',' + v.displayString + ',' + v.file}
+            </span>
+        </div>
+    )});
+}
 
-const DragonFlyComponent =  React.createClass ({
-    render: function() {
+const DragonFlyComponent = _ => ({
+    render: function () {
         const props = this.props;
         const attributes = {...(!(props.leftList)) && {style: {display: "none"}}};
         return (<div id="dragonFly">
@@ -56,37 +81,27 @@ const DragonFlyComponent =  React.createClass ({
 
                         />
                     <List className="overflowy">
-                        {populateList(props.leftList, node => props.addDepnt({source: node, target: props.centreData}))}
+                        {populateList(props.leftList, node => {
+                            props.addDepnt({source: node, target: props.centreData})
+                        }, "left")}
                     </List>
                 </Paper>
             </div>
             <div id="centreBox">
                     <Paper zDepth={4}>
-                    <div onClick={e => {
-                        e.stopPropagation();
-                        props.addSelectedNode(props.centreData);
-                    }}>
+                    <div>
                         <span>{props.centreData.kind}<br /></span>
                         <span>{props.centreData.displayString}</span>
                     </div>
                     </Paper>
                     <div id="dependency-list">
-                        <Paper>
-                        <List>
-                            <ListItem>TAIL ATTEMPT</ListItem>
-                            <ListItem>LOOK AT TAIL </ListItem>
-                            <ListItem>more tail</ListItem>
-                        </List>
-                        </Paper>
-                    </div>
-                    <div id="dep-group-list">
-                        <Paper>
-                        <List>
-                            <ListItem>Where we group the dependencies</ListItem>
-                            <ListItem>LOOK AT TAIL </ListItem>
-                            <ListItem>more tail</ListItem>
-                        </List>
-                        </Paper>
+                        <ul style={{position: "relative"}}
+                            onClick={e => {
+                                e.stopPropagation();
+                                props.clickOnTail();
+                            }}>
+                            {populateTail(props.tail)}
+                        </ul>
                     </div>
             </div>
             <div id="rightBox">
@@ -99,7 +114,10 @@ const DragonFlyComponent =  React.createClass ({
                     value={props.rightFilterField}
                     />
                 <List className="overflowy">
-                    {populateList(props.rightList, (node) => props.addDep({source: props.centreData, target: node}))}
+                    {populateList(props.rightList, (node) => {
+                        props.addDep({source: props.centreData, target: node})
+                }, "right")}
+                    
                 </List>
                 </Paper>
             </div>
@@ -113,23 +131,31 @@ const mapStateToProps = state => ({
     rightList: getFilteredDependencies(state),
     centreData: getFocussedTokenFromState(state),
     leftFilterField: getLeftFilterText(state),
-    rightFilterField: getRightFilterText(state)
+    rightFilterField: getRightFilterText(state),
+    tail: getDragonflyTail(state)
 });
 
 const mapDispatchToProps = dispatch => ({
     leftInput: filterText => dispatch(actions.updateLeftFilter(filterText)),
     rightInput: filterText => dispatch(actions.updateRightFilter(filterText)),
     addDep: ({source, target}) => {
-        dispatch(actions.addNode(target));
-        dispatch(actions.addEdge({source, target}));
+        dispatch(actions.addD3MutationHistory(actions.addNode(source)));
+        dispatch(actions.addD3MutationHistory(actions.addNode(target)));
+        dispatch(actions.addD3MutationHistory(actions.addEdge({source, target})));
+        dispatch(actions.addNodeHistory(true, source));
         dispatch(actions.fetchSelected(target.file, target.start.line, target.start.offset))
     },
     addDepnt: ({source, target}) => {
-        dispatch(actions.addNode(source));
-        dispatch(actions.addEdge({source, target}));
+        dispatch(actions.addNodeHistory(false, target));
+        dispatch(actions.addD3MutationHistory(actions.addNode(source)));
+        dispatch(actions.addD3MutationHistory(actions.addNode(target)));
+        dispatch(actions.addD3MutationHistory(actions.addEdge({source, target})));
         dispatch(actions.fetchSelected(source.file, source.start.line, source.start.offset))
     },
-    addSelectedNode: node => dispatch(actions.addNode(node))
+    clickOnTail: () => {
+        dispatch(actions.applyD3MutationHistory());
+        dispatch(actions.clearTailHistory());
+    }
 });
 
 export const DragonFly = connect(

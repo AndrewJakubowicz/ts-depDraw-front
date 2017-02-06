@@ -130,6 +130,11 @@ export const addD3TokenDependents = (file, line, offset) => ({
 export const ADD_NODE = "ADD_NODE";
 export const ADD_EDGE = "ADD_EDGE";
 export const REMOVE_NODE = "REMOVE_NODE";
+export const ADD_NODE_HISTORY = "dragonfly/ADD_NODE_HISTORY";
+export const CLEAR_TAIL_HISTORY = "dragonfly/CLEAR_TAIL_HISTORY";
+export const ADD_D3_MUTATION_HISTORY = "dragonfly/ADD_D3_MUTATION_HISTORY";
+export const APPLY_D3_MUTATION_HISTORY = "dragonfly/APPLY_D3_MUTATION_HISTORY";
+export const CLEAR_D3_UNPLAYED_HISTORY = "dragonfly/CLEAR_D3_UNPLAYED_HISTORY";
 
 export const addNode = node => ({
     type: ADD_NODE,
@@ -149,6 +154,34 @@ export const removeNode = node => ({
     node
 });
 
+export const addD3MutationHistory = actionPayload => ({
+    type: ADD_D3_MUTATION_HISTORY,
+    actionPayload
+});
+
+export const applyD3MutationHistory= _ => ({
+    type: APPLY_D3_MUTATION_HISTORY
+});
+
+export const clearTailHistory = _ => ({
+    type: CLEAR_TAIL_HISTORY
+});
+
+export const clearD3UnplayedHistory = _ => ({
+    type: CLEAR_D3_UNPLAYED_HISTORY
+});
+
+/**
+ * Appends centre token to the tail or head.
+ * isDependency relates to the token clicked.
+ * If the next token clicked is a dependency of the
+ * centre token then isDependency should be true.
+ */
+export const addNodeHistory = (isDependency, node) => ({
+    type: ADD_NODE_HISTORY,
+    isDependency,
+     node
+});
 
 /**
  * DRAGONFLY
@@ -168,6 +201,8 @@ export const FETCH_SELECTED = "FETCH_SELECTED";
 export const UPDATE_LEFT_FILTER = "UPDATE_LEFT_FILTER";
 export const UPDATE_RIGHT_FILTER = "UPDATE_RIGHT_FILTER";
 export const EMPTY_FILTERS = "EMPTY_FILTERS";
+
+export const ADD_DRAGONFLY_TAIL = "ADD_DRAGONFLY_TAIL";
 
 
 export const openDragonfly = () => ({
