@@ -197,6 +197,8 @@ export const POPULATE_DRAGONFLY_TOKEN = "POPULATE_DRAGONFLY_TOKEN";
 export const FETCH_DEPS = "FETCH_DEPS";
 export const FETCH_DEPNTS = "FETCH_DEPNTS";
 export const FETCH_SELECTED = "FETCH_SELECTED";
+export const FETCH_SELECTED_TOKEN = "dragonfly/FETCH_SELECTED_TOKEN";
+export const FETCH_DEPNTS_TOKEN = "dragonfly/FETCH_DEPNTS_TOKEN";
 
 export const UPDATE_LEFT_FILTER = "UPDATE_LEFT_FILTER";
 export const UPDATE_RIGHT_FILTER = "UPDATE_RIGHT_FILTER";
@@ -219,12 +221,24 @@ export const fetchSelected = (file, line, offset) => ({
     line,
     offset
 });
+export const fetchSelectedToken = token => ({
+    type: FETCH_SELECTED_TOKEN,
+    token
+});
 
 export const fetchDeps = (file, line, offset) => ({
     type: FETCH_DEPS,
     file,
     line,
     offset
+});
+
+/**
+ * Fetch dependents by posting the json token.
+ */
+export const fetchDepntsTOKEN = token => ({
+    type: FETCH_DEPNTS_TOKEN,
+    token
 });
 
 export const fetchDepnts = (file, line, offset) => ({

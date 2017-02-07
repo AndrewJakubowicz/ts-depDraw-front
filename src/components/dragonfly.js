@@ -150,7 +150,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(actions.addD3MutationHistory(actions.addNode(source)));
         dispatch(actions.addD3MutationHistory(actions.addNode(target)));
         dispatch(actions.addD3MutationHistory(actions.addEdge({source, target})));
-        dispatch(actions.fetchSelected(source.file, source.start.line, source.start.offset))
+        dispatch(actions.fetchSelectedToken(source))
     },
     clickOnTail: () => {
         dispatch(actions.applyD3MutationHistory());

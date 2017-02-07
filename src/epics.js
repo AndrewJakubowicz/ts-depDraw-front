@@ -47,12 +47,26 @@ const chainGetRootTokenType = ({file, line, offset}) =>
                     if (data && data.hasOwnProperty('success')){
                         return data.success
                     }
+                    return false;
                 })
-            .map(quickTypeInfo => quickTypeInfo.body)
-            .map(typeBody => ({
-                ...typeBody,
-                file: file
-        }))
+            .map(quickTypeInfo => {
+                if (quickTypeInfo.body){
+                    return quickTypeInfo.body
+                }
+                if (quickTypeInfo.hasOwnProperty('success')) {
+                    delete quickTypeInfo.success;
+                }
+                return quickTypeInfo
+            })
+            .map(typeBody => {
+                if (!typeBody.hasOwnProperty('file')){
+                    return {
+                        ...typeBody,
+                        file: file
+                    }
+                }
+                return typeBody;
+        })
         .catch(err => {
             console.error(`Error in chainGetRootTokenType:`, err);
             return Rx.Observable.empty();
@@ -94,7 +108,25 @@ const populateDragonflySelectedEpic = actions$ =>
             console.error(`Error in populateDragonflySelectedEpic:`, err);
             return Rx.Observable.empty();
         });
-            
+
+const populateDragonflySelectedTokenEpic = actions$ =>
+    actions$.ofType(actions.FETCH_SELECTED_TOKEN)
+        .mergeMap(({token}) => ajax.post(`http://localhost:${PORT}/api/getTokenType`, token, {"Content-Type": "application/json"}))
+        .mergeMap(respJson => {
+                const token = respJson.response;
+                console.log('thetoken:', token)
+                const op = [actions.openDragonfly(),
+                    actions.populateDragonflySelectedToken(token),
+                    actions.fetchDeps(token.file, token.start.line, token.start.offset),
+                    actions.fetchDepntsTOKEN(token)
+                    ];
+            return Rx.Observable.from(op);
+            })
+        .catch(err => {
+            console.error(`Error in populateDragonflySelectedEpic:`, err);
+            return Rx.Observable.empty();
+        });
+              
 
 const populateDragonflyDepEpic = actions$ =>
  actions$.ofType(actions.FETCH_DEPS)
@@ -116,12 +148,26 @@ const populateDragonflyDepntsEpic = actions$ =>
         return Rx.Observable.empty();
     });
 
+const populateDragonflyDepntsTokenEpic = actions$ =>
+ actions$.ofType(actions.FETCH_DEPNTS_TOKEN)
+    .mergeMap(({token}) =>
+        ajax.post(`http://localhost:${PORT}/api/getTokenDependents`, token, {"Content-Type": "application/json"}))
+    .map(respObj => {
+        return actions.populateDragonflyDepnts(respObj.response);
+    })
+    .catch(err => {
+        console.error(`Error in populateDragonflyDepntsEpic:`, err);
+        return Rx.Observable.empty();
+    });
+
 const dragonFlyEpics = combineEpics(
     openDragonflyEpic,
     closeDragonflyEpic,
     populateDragonflySelectedEpic,
     populateDragonflyDepEpic,
-    populateDragonflyDepntsEpic
+    populateDragonflyDepntsEpic,
+    populateDragonflySelectedTokenEpic,
+    populateDragonflyDepntsTokenEpic
 )
 
 export const rootEpic = combineEpics(
