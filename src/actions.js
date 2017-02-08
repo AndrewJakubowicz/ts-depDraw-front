@@ -137,7 +137,7 @@ export const addD3AllTokenDepEdges = (file, line, offset) => ({
 /**
  * Actions for mutating the d3 graph
  */
-
+export const ADD_HISTORY = "ADD_HISTORY";
 export const ADD_NODE = "ADD_NODE";
 export const ADD_EDGE = "ADD_EDGE";
 export const REMOVE_NODE = "REMOVE_NODE";
@@ -146,6 +146,14 @@ export const CLEAR_TAIL_HISTORY = "dragonfly/CLEAR_TAIL_HISTORY";
 export const ADD_D3_MUTATION_HISTORY = "dragonfly/ADD_D3_MUTATION_HISTORY";
 export const APPLY_D3_MUTATION_HISTORY = "dragonfly/APPLY_D3_MUTATION_HISTORY";
 export const CLEAR_D3_UNPLAYED_HISTORY = "dragonfly/CLEAR_D3_UNPLAYED_HISTORY";
+
+/**
+ * These actions are stored into a history to be replayed if needed.
+ */
+export const addActionHistory = actionPayload => ({
+    type: ADD_HISTORY,
+    actionPayload
+});
 
 export const addNode = node => ({
     type: ADD_NODE,
@@ -165,6 +173,9 @@ export const removeNode = node => ({
     node
 });
 
+/**
+ * This adds any given action to a history.
+ */
 export const addD3MutationHistory = actionPayload => ({
     type: ADD_D3_MUTATION_HISTORY,
     actionPayload
@@ -187,6 +198,7 @@ export const clearD3UnplayedHistory = _ => ({
  * isDependency relates to the token clicked.
  * If the next token clicked is a dependency of the
  * centre token then isDependency should be true.
+ * This helps keep the dragonfly tail.
  */
 export const addNodeHistory = (isDependency, node) => ({
     type: ADD_NODE_HISTORY,

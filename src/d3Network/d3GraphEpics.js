@@ -31,6 +31,7 @@ const addNodeEpic = (action$, store) =>
         .filter(action => !(NODESTORE.has(hashNodeToString(action.node))))
         .do(action => NODESTORE.set(hashNodeToString(action.node), JSON.parse(JSON.stringify(action.node))))
         .do(action => d3Graph.pushNode(NODESTORE.get(hashNodeToString(action.node))))
+        .do(action => store.dispatch(actions.addActionHistory(action)))
         // Now that we have added the node. We need to add all dependency edges
         .mergeMap(action => {
             const v = action.node;
@@ -56,19 +57,25 @@ const addNodeEpic = (action$, store) =>
 /**
  * Both nodes need to exist otherwise the operation cancels.
  */
-const addEdgeEpic = action$ =>
+const addEdgeEpic = (action$, store) =>
     action$.ofType(actions.ADD_EDGE)
         .map(({edge: {source, target}}) => ({
                 source: hashNodeToString(source),
                 target: hashNodeToString(target)
             }))
-        .do(({source, target}) =>
-                NODESTORE.has(source)
-                &&  NODESTORE.has(target)
-                &&  (d3Graph.pushLink({source: NODESTORE.get(source),
-                     target: NODESTORE.get(target)})
-                     || true)
-                ||  console.error("Those nodes don't exist!!!"))
+        .do(({source, target}) => {
+            if (NODESTORE.has(source) &&  NODESTORE.has(target)) {
+                /**
+                 * Here is where we add the edge and also keep a history of the mutation.
+                 */
+                d3Graph.pushLink({source: NODESTORE.get(source),
+                                    target: NODESTORE.get(target)})
+                store.dispatch(actions.addActionHistory(actions.addEdge({source: NODESTORE.get(source),
+                                                                            target: NODESTORE.get(target)})))
+            } else {
+                console.error("Those nodes don't exist!!!")
+            }
+        })
         .mergeMap(_ => Rx.Observable.empty())
         .catch(err => {
             console.error(`Error in addEdgeEpic:`, err);
@@ -78,13 +85,17 @@ const addEdgeEpic = action$ =>
 /**
  * This will also remove all the edges associated with that node.
  */
-const removeNodeEpic = actions$ =>
+const removeNodeEpic = (actions$, store) =>
     actions$.ofType(actions.REMOVE_NODE)
         .map(({node}) => hashNodeToString(node))
-        .do(node => NODESTORE.delete(node)
-                    && d3Graph.removeNode(node)
-                    || console.error("Error removing node")
-            )
+        .do(node => {
+            if (NODESTORE.delete(node)){
+                d3Graph.removeNode(node);
+                store.dispatch(actions.addActionHistory(actions.removeNode(node)))
+            } else {
+                console.error("Error removing node")
+            }
+        })
         .mergeMap(_ => Rx.Observable.empty())
         .catch(err => {
             console.error(`Error in removeNodeEpic:`, err);

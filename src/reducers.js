@@ -204,10 +204,12 @@ export const getUnplayedMutations = state => state.unplayedHistory;
  */
 const historyD3Reducer = (state = [], action) => {
     switch(action.type){
-        case actions.ADD_NODE:
-        case actions.ADD_EDGE:
-        case actions.REMOVE_NODE:
-            return [...state, action]
+        // case actions.ADD_NODE:
+        // case actions.ADD_EDGE:
+        // case actions.REMOVE_NODE:
+            // return [...state, action]
+        case actions.ADD_HISTORY:
+            return [...state, action.actionPayload];
         default:
             return state;
     }
