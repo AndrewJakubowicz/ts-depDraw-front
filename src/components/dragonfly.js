@@ -141,7 +141,6 @@ const mapDispatchToProps = dispatch => ({
     addDep: ({source, target}) => {
         dispatch(actions.addD3MutationHistory(actions.addNode(source)));
         dispatch(actions.addD3MutationHistory(actions.addNode(target)));
-        // dispatch(actions.addD3MutationHistory(actions.addEdge({source, target})));
         dispatch(actions.addNodeHistory(true, source));
         dispatch(actions.fetchSelected(target.file, target.start.line, target.start.offset))
     },
@@ -149,7 +148,6 @@ const mapDispatchToProps = dispatch => ({
         dispatch(actions.addNodeHistory(false, target));
         dispatch(actions.addD3MutationHistory(actions.addNode(source)));
         dispatch(actions.addD3MutationHistory(actions.addNode(target)));
-        // dispatch(actions.addD3MutationHistory(actions.addEdge({source, target})));
         dispatch(actions.fetchSelectedToken(source))
     },
     clickOnTail: () => {
