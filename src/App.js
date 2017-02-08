@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Paper from 'material-ui/Paper';
 
+import {StartModalBox} from './components/modalContinueLoadBox';
 import {CodeDisplayEditor} from './components/myCodeMirror';
 import {OpenFileTabs} from './components/fileTabs';
 import {DragonFly} from './components/dragonfly';
@@ -14,6 +15,7 @@ class App extends Component {
       <div className="App flexbox">
         <div className="row content"></div>
         <DragonFly />
+        <StartModalBox />
         <Paper style={{width: '90%',
                       margin: '0 auto 0 auto'}} zDepth={1}>
         <OpenFileTabs />

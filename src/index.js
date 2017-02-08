@@ -40,10 +40,16 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-// Init stuff
-setTimeout(_ => {
-  store.dispatch({type: actions.INIT_PROGRAM});
-}, 1);
+/**
+ * INIT STUFF
+ * TODO: change to have popup
+ * On initialization we want people to be greated by a popup.
+ * This popup will have terms and conditions.
+ * 
+ * Then we want to ask if they want to connect to the server.
+ * Otherwise they can load up someone elses.
+ */
+// CURRENTLY A MODAL BOX OPENS
 
 // Close the dragonfly if they click away from the codeMirror.
 window.addEventListener("click", e => {
