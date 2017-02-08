@@ -8,6 +8,22 @@ import {rootD3Epics} from './d3Network/d3GraphEpics';
 const {ajax} = Rx.Observable;
 const PORT = 8080;
 
+const initProgramEpic = action$ =>
+    action$.ofType(actions.INIT_PROGRAM)
+        .mergeMap(action => {
+            console.log("Retrying connection to server....")
+            return ajax.getJSON(`http://localhost:${PORT}/api/getFileText`)
+                .catch(err => {
+                    console.log('Failed to connect. Make sure server is running!');
+                })
+                .retryWhen(err => err.delayWhen(_ => Rx.Observable.timer(1500)))
+                .mergeMap(jsonObj =>
+                    Rx.Observable.from([actions.updateCodeMirrorText(jsonObj.text),
+                                        actions.addOpenFileName(jsonObj.file)]))
+            })
+
+
+
 export const getFileTextEpic = (action$) =>
     action$.ofType(actions.FETCH_FILE_TEXT)
         .mergeMap(action => 
@@ -171,6 +187,7 @@ const dragonFlyEpics = combineEpics(
 )
 
 export const rootEpic = combineEpics(
+    initProgramEpic,
     getFileTextEpic,
     getOpenFileText,
     rootD3Epics,

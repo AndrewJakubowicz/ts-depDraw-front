@@ -42,7 +42,7 @@ ReactDOM.render(
 
 // Init stuff
 setTimeout(_ => {
-  store.dispatch(actions.fetchFileText());
+  store.dispatch({type: actions.INIT_PROGRAM});
 }, 1);
 
 // Close the dragonfly if they click away from the codeMirror.
