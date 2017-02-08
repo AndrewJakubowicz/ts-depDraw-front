@@ -133,6 +133,9 @@ module.exports = (()=> {
          * Pass them in here, and use the hash to remove them.
          */
         pushLink: function(link){
+            if (hashNodeToString(link.source) === hashNodeToString(link.target)){
+                return false
+            }
             links.push(link);
             hashLinks.push({source: hashNodeToString(link.source),
                             target: hashNodeToString(link.target)});

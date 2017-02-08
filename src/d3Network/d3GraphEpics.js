@@ -23,14 +23,31 @@ const NODESTORE = new Map();
  * very side effecty d3Graph module.
  * 
  * Nodes can only be added in a side effect manner. :/
+ * 
+ * Whenever a node is added we need to add edges with all other nodes drawn.
  */
-
-const addNodeEpic = action$ =>
+const addNodeEpic = (action$, store) =>
     action$.ofType(actions.ADD_NODE)
         .filter(action => !(NODESTORE.has(hashNodeToString(action.node))))
         .do(action => NODESTORE.set(hashNodeToString(action.node), JSON.parse(JSON.stringify(action.node))))
         .do(action => d3Graph.pushNode(NODESTORE.get(hashNodeToString(action.node))))
-        .mergeMap(_ => Rx.Observable.empty())
+        // Now that we have added the node. We need to add all dependency edges
+        .mergeMap(action => {
+            const v = action.node;
+            let defEdge = ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+                .map(listOfDeps => listOfDeps.map(deps => ({
+                                        source: action.node,
+                                        target: deps}))
+                                        .map(actions.addEdge));
+            let depEdge = ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependents?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+                .map(listOfDepnts => listOfDepnts.map(depnts => ({
+                                        target: action.node,
+                                        source: depnts}))
+                                        .map(actions.addEdge));
+            return defEdge.merge(depEdge);
+        })
+        .flatMap(v => v)
+        // Now add dependents
         .catch(err => {
             console.error(`Error in addNodeEpic:`, err);
             return Rx.Observable.empty();
@@ -136,6 +153,24 @@ const addAllTokenDependenciesEpic = actions$ =>
             return Rx.Observable.empty();
         });
 
+/**
+ * This adds all the edges that exist.
+ */
+const addAllTokenDependenciesEdgesEpic = actions$ =>
+    actions$.ofType(actions.ADD_D3_ALL_TOKEN_DEP_EDGES)
+        .mergeMap(chainGetRootTokenType)
+        .flatMap(v => 
+            ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+                .map(listOfDeps => listOfDeps.map(deps => ({
+                                        source: v,
+                                        target: deps})))
+        ).flatMap(v => v)
+        .flatMap(v => Rx.Observable.from([actions.addNode(v.target), actions.addEdge(v)]))
+        .catch(err => {
+            console.error(`Error in addAllTokenDependenciesEpic:`, err);
+            return Rx.Observable.empty();
+        });
+
 const addAllTokenDependentsEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_TOKEN_DEPNDTS)
         .mergeMap(chainGetRootTokenType)
@@ -188,6 +223,9 @@ const highlightCodeMirrorRegionEpic = actions$ =>
             return Rx.Observable.empty();
         });
 
+/** 
+ * Here is were mutations are initiated.
+ */
 const applyD3MutationsEpic = (actions$, store) =>
     actions$.ofType(actions.APPLY_D3_MUTATION_HISTORY)
         .mergeMap(_ => {
