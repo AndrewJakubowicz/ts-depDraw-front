@@ -42,6 +42,7 @@ class DialogStartModalComponent extends React.Component {
                 this.setState({warningText: "Make sure your save file ends with '.tsDepDraw'"});
             }
         } else {
+            this.setState({warningText: ""});
             this.setState({loadDisabled: true})
         }
         
@@ -54,7 +55,6 @@ class DialogStartModalComponent extends React.Component {
     };
 
     handleCloseWithLoad = () => {
-
         this.setState({open: false});
     };
 
