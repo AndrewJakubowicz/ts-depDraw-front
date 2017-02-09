@@ -61,18 +61,7 @@ export function strMapToObj(strMap) {
     return obj;
 }
 
-/**
- * Converts the past object back into a Map.
- * 
- * Coutesy of: http://www.2ality.com/2015/08/es6-map-json.html
- */
-export function objToStrMap(obj) {
-    let strMap = new Map();
-    for (let k of Object.keys(obj)) {
-        strMap.set(k, obj[k]);
-    }
-    return strMap;
-}
+
 
 /**
  * Removes circular dependencies from action history.
