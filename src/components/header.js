@@ -5,15 +5,21 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 
-import saveStore from './util/saveStore';
+import saveStore, {strMapToObj, flattenActionHistory} from './util/saveStore';
 
 import {getPlayedD3History} from '../reducers';
+
+import {NODESTORE_REF} from '../d3Network/d3GraphEpics';
 
 
 
 const AppHeaderComponent =  React.createClass({
     handleSaveClick: function(){
-        alert(JSON.stringify(this.props.actionHistory));
+        const saveData = {
+            nodeStore: strMapToObj(NODESTORE_REF),
+            actionHistory: flattenActionHistory(this.props.actionHistory)
+        }
+        console.log(JSON.stringify(saveData))
         
     },
     render: function() {
@@ -28,7 +34,7 @@ const AppHeaderComponent =  React.createClass({
 
 const mapStateToProps = state => ({
     actionHistory: getPlayedD3History(state),
-    
+
 });
 
 const mapDispatchToProps = dispatch => ({
