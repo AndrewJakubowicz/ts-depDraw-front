@@ -211,6 +211,8 @@ const historyD3Reducer = (state = [], action) => {
     }
 }
 
+export const getPlayedD3History = state => state.D3history;
+
 // rootReducer is the base of the store.
 export const rootReducer = combineReducers({
     openFileText: fileTextReducer,

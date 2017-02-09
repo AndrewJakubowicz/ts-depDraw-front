@@ -13,8 +13,10 @@ const PORT = 8080;
 
 /**
  * Stores the nodes in a map, allowing easy removing of nodes.
+ * 
+ * exported so that we can save it.
  */
-const NODESTORE = new Map();
+export const NODESTORE = new Map();
 
 
 
