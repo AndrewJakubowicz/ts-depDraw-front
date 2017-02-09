@@ -16,7 +16,9 @@ const PORT = 8080;
  * 
  * exported so that we can save it.
  */
-export const NODESTORE = new Map();
+const NODESTORE = new Map();
+
+export const NODESTORE_REF = NODESTORE;
 
 
 
