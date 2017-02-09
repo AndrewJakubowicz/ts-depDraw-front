@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import {AppHeader} from './components/header';
 import './index.css';
 
 
@@ -39,6 +40,15 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 );
+
+ReactDOM.render(
+  <Provider store={store}>
+    <MuiThemeProvider>
+      <AppHeader />
+    </MuiThemeProvider>
+  </Provider>,
+  document.getElementById('head')
+)
 
 /**
  * INIT STUFF
