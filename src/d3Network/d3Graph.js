@@ -61,7 +61,7 @@ module.exports = (()=> {
         links = [];
     
     var simulation = cola.d3adaptor(d3)
-        .avoidOverlaps(true)
+        .avoidOverlaps(false)
         .flowLayout('x', 50)
         .jaccardLinkLengths(50)
         .handleDisconnected(false)
@@ -114,7 +114,7 @@ module.exports = (()=> {
             
             // simulation.nodes(nodes);
             // simulation.links(links);
-            simulation.start();
+            simulation.start(10, 15, 20);
         },
         ticked: ticked,
         /**
