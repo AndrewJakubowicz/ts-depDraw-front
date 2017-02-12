@@ -5,6 +5,8 @@ import * as actions from '../actions';
 import {hashNodeToString} from './util/hashNode';
 import * as s from '../reducers';
 
+import {getTokenTypeURL, getTokenDependencies, getTokenDependents} from './util/requests';
+
 // D3
 var d3Graph = require('./d3Graph');
 
@@ -39,12 +41,12 @@ const addNodeEpic = (action$, store) =>
         // Now that we have added the node. We need to add all dependency edges
         .mergeMap(action => {
             const v = action.node;
-            let defEdge = ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+            let defEdge = ajax.getJSON(getTokenDependencies(v.file, v.start.line, v.start.offset))
                 .map(listOfDeps => listOfDeps.map(deps => ({
                                         source: action.node,
                                         target: deps}))
                                         .map(actions.addEdge));
-            let depEdge = ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependents?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+            let depEdge = ajax.getJSON(getTokenDependents(v.file, v.start.line, v.start.offset))
                 .map(listOfDepnts => listOfDepnts.map(depnts => ({
                                         target: action.node,
                                         source: depnts}))
@@ -110,7 +112,7 @@ const removeNodeEpic = (actions$, store) =>
 const addTokenTypeEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_TOKEN_TYPE)
         .throttleTime(50)
-        .mergeMap(({file, line, offset}) => ajax.getJSON(`http://localhost:${PORT}/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`)
+        .mergeMap(({file, line, offset}) => ajax.getJSON(getTokenTypeURL(file, line, offset))
             .filter(data => {
                 if (data && data.hasOwnProperty('success')){
                     return data.success
@@ -133,7 +135,7 @@ const addTokenTypeEpic = actions$ =>
  * Gets the root token type, used as helper function.
  */
 const chainGetRootTokenType = ({file, line, offset}) => 
-            ajax.getJSON(`http://localhost:${PORT}/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`)
+            ajax.getJSON(getTokenTypeURL(file, line, offset))
                 .filter(data => {
                     if (data && data.hasOwnProperty('success')){
                         return data.success
@@ -157,7 +159,7 @@ const addAllTokenDependenciesEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_TOKEN_DEPS)
         .mergeMap(chainGetRootTokenType)
         .flatMap(v => 
-            ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+            ajax.getJSON(getTokenDependencies(v.file, v.start.line, v.start.offset))
                 .map(listOfDeps => listOfDeps.map(deps => ({
                                         source: v,
                                         target: deps})))
@@ -175,7 +177,7 @@ const addAllTokenDependenciesEdgesEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_ALL_TOKEN_DEP_EDGES)
         .mergeMap(chainGetRootTokenType)
         .flatMap(v => 
-            ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependencies?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+            ajax.getJSON(getTokenDependencies(v.file, v.start.line, v.start.offset))
                 .map(listOfDeps => listOfDeps.map(deps => ({
                                         source: v,
                                         target: deps})))
@@ -190,7 +192,7 @@ const addAllTokenDependentsEpic = actions$ =>
     actions$.ofType(actions.ADD_D3_TOKEN_DEPNDTS)
         .mergeMap(chainGetRootTokenType)
         .flatMap(v => 
-            ajax.getJSON(`http://localhost:${PORT}/api/getTokenDependents?filePath=${v.file}&line=${v.start.line}&offset=${v.start.offset}`)
+            ajax.getJSON(getTokenDependents(v.file, v.start.line, v.start.offset))
                 .map(listOfDeps => listOfDeps.map(depnts => ({
                                         source: depnts,
                                         target: v})))
