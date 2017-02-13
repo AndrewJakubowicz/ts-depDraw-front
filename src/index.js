@@ -32,6 +32,7 @@ const logger = createLogger();
 let store = createStore(rootReducer,
             applyMiddleware(epicMiddleWare, logger));
 window.store = store;
+
 ReactDOM.render(
   <Provider store={store}>
     <MuiThemeProvider>

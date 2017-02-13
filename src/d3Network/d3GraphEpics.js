@@ -95,7 +95,6 @@ const removeNodeEpic = (actions$, store) =>
         .do(action => {
             if (NODESTORE.delete(action.node)){
                 d3Graph.removeNode(action.node);
-                store.dispatch(actions.addActionHistory(action))
             } else {
                 console.error(`Error removing node: tried to remove(${action.node}) from ${NODESTORE}`, action.node, NODESTORE)
             }

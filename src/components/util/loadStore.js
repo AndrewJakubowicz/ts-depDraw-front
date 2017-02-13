@@ -17,7 +17,7 @@ const loadStore = (saveData) => {
     const tempNodeStore = objToStrMap(saveData.nodeStore);
     console.log(tempNodeStore);
     const newActionHistory = expandActionHistory(saveData.actionHistory, tempNodeStore);
-    return newActionHistory
+    return newActionHistory.filter(v => v !== "EMPTY");
 }
 
 export default loadStore;
@@ -39,11 +39,15 @@ export function objToStrMap(obj) {
 
 /**
  * Returns action history with nodes filled in.
+ * If nodes don't exist adds string 'EMPTY' in their place.
  */
 function expandActionHistory(flatHistory, nodeMap){
     return flatHistory.map(v => {
         switch(v.type){
             case actions.ADD_EDGE:
+                if (!(nodeMap.get(v.edge.source) && nodeMap.get(v.edge.target))){
+                    return "EMPTY";
+                }
                 return {
                     ...v,
                     edge: {
@@ -52,6 +56,9 @@ function expandActionHistory(flatHistory, nodeMap){
                     }
                 }
             case actions.ADD_NODE:
+                if (!nodeMap.get(v.node)){
+                    return "EMPTY";
+                }
                 return {
                     ...v,
                     node: nodeMap.get(v.node)

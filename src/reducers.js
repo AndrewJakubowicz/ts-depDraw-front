@@ -201,6 +201,11 @@ export const getUnplayedMutations = state => state.unplayedHistory;
 
 /**
  * This reducer only saves actions that it's told to save.
+ * 
+ * Why do we explicitly save using 'ADD_HISTORY'?
+ * - it won't save every node added (including failed ones).
+ * - it also won't save every edge added.
+ * - the program optimistically tries to add all edges / nodes bloating the history.
  */
 const historyD3Reducer = (state = [], action) => {
     switch(action.type){

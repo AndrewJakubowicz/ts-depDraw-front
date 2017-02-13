@@ -116,7 +116,8 @@ module.exports = (()=> {
 
     function dblclickHandler(d) {
         const nodeHash = hashNodeToString(d);
-        localRemove(nodeHash);
+        // localRemove(nodeHash);
+        window.store.dispatch(actions.removeNode(nodeHash));
     }
 
     function localRestart(){

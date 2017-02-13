@@ -65,6 +65,11 @@ export function strMapToObj(strMap) {
 
 /**
  * Removes circular dependencies from action history.
+ * 
+ * We don't care about storing deleted actions, because
+ * deleting nodes deletes them from the node MAP.
+ * Before loaded nodes are drawn they are retrieved from the MAP.
+ * If that fails they're assumed to have been deleted. 
  */
 export function flattenActionHistory(actionHistory){
     return actionHistory.map(v => {
@@ -82,23 +87,6 @@ export function flattenActionHistory(actionHistory){
                     ...v,
                     node: hashNodeToString(v.node)
                 }
-            /**
-             * It is not ideal to store these.
-             * This is because the final nodestore will not have
-             * these nodes included.
-             * It is better to recreate the diagram with only
-             * nodes we want.
-             * This could create edge cases where the diagram
-             * is slightly different.
-             * Todo (HARD - not possible with prototype): solve this by
-             *      making sure dependencies and dependents
-             *      behave exactly the same (which they don't always)
-             */
-            // case actions.REMOVE_NODE:
-            //     return {
-            //         ...v,
-            //         node: hashNodeToString(v.node)
-            //     }
             default:
                 console.error("An action was unhandled")
                 return {
