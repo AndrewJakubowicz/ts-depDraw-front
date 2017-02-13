@@ -251,17 +251,11 @@ function removeCircularReferenceNode (node) {
     return {
         displayString: node.displayString,
         documentation: node.documentation,
-        end: {line: node.end.line,
-              offset: node.end.offset},
         file: node.file,
-        height: node.height,
         kind: node.kind,
         kindModifiers: node.kindModifiers,
         start: {line: node.start.line,
                 offset: node.start.offset},
-        width: node.width,
-        x: node.x,
-        y: node.y
     }
 }
 
