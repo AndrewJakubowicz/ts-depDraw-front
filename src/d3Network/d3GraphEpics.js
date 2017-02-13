@@ -11,7 +11,6 @@ import {getTokenTypeURL, getTokenDependencies, getTokenDependents} from './util/
 var d3Graph = require('./d3Graph');
 
 const {ajax} = Rx.Observable;
-const PORT = 8080;
 
 /**
  * Stores the nodes in a map, allowing easy removing of nodes.
@@ -93,13 +92,11 @@ const addEdgeEpic = (action$, store) =>
  */
 const removeNodeEpic = (actions$, store) =>
     actions$.ofType(actions.REMOVE_NODE)
-        .map(({node}) => hashNodeToString(node))
-        .do(node => {
-            if (NODESTORE.delete(node)){
-                d3Graph.removeNode(node);
-                store.dispatch(actions.addActionHistory(actions.removeNode(node)))
+        .do(action => {
+            if (NODESTORE.delete(action.node)){
+                d3Graph.removeNode(action.node);
             } else {
-                console.error("Error removing node")
+                console.error(`Error removing node: tried to remove(${action.node}) from ${NODESTORE}`, action.node, NODESTORE)
             }
         })
         .mergeMap(_ => Rx.Observable.empty())
@@ -246,7 +243,7 @@ const highlightCodeMirrorRegionEpic = actions$ =>
 const applyD3MutationsEpic = (actions$, store) =>
     actions$.ofType(actions.APPLY_D3_MUTATION_HISTORY)
         .mergeMap(_ => {
-            return Rx.Observable.from([actions.clearD3UnplayedHistory(), ...s.getUnplayedMutations(store.getState())])
+            return Rx.Observable.from([...s.getUnplayedMutations(store.getState()), actions.clearD3UnplayedHistory()])
         });
 
 

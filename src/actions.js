@@ -181,7 +181,7 @@ export const addD3MutationHistory = actionPayload => ({
     actionPayload
 });
 
-export const applyD3MutationHistory= _ => ({
+export const applyD3MutationHistory = _ => ({
     type: APPLY_D3_MUTATION_HISTORY
 });
 
@@ -198,7 +198,7 @@ export const clearD3UnplayedHistory = _ => ({
  * isDependency relates to the token clicked.
  * If the next token clicked is a dependency of the
  * centre token then isDependency should be true.
- * This helps keep the dragonfly tail.
+ * This helps keep the dragonfly tail staggered in the correct directions.
  */
 export const addNodeHistory = (isDependency, node) => ({
     type: ADD_NODE_HISTORY,
