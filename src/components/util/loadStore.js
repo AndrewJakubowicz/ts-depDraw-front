@@ -1,4 +1,3 @@
-import {hashNodeToString} from '../../d3Network/util/hashNode';
 import * as actions from '../../actions';
 
 // nodeStore: strMapToObj(NODESTORE_REF),

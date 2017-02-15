@@ -154,7 +154,7 @@ module.exports = (()=> {
                     div.transition()		
                         .duration(200)		
                         .style("opacity", .9);		
-                    div	.html(`<span>${JSON.stringify(removeCircularReferenceNode(d))}</span>`)	
+                    div.html(`<span>${JSON.stringify(removeCircularReferenceNode(d))}</span>`)	
                         .style("left", (d3.event.pageX) + "px")		
                         .style("top", (d3.event.pageY - 28) + "px");	
                     })					

@@ -254,6 +254,7 @@ export const rootD3Epics = combineEpics(
     addTokenTypeEpic,
     addAllTokenDependenciesEpic,
     addAllTokenDependentsEpic,
+    addAllTokenDependenciesEdgesEpic,
     focusTokenTextEpic,
     highlightCodeMirrorRegionEpic,
     applyD3MutationsEpic

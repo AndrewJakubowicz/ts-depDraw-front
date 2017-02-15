@@ -5,7 +5,6 @@ import {INIT_PROGRAM} from '../actions';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 
 import loadStore from './util/loadStore';
 

@@ -76,7 +76,7 @@ const DragonFlyComponent = _ => ({
                         hintText="Filter dependents"
 
                         onClick={e => e.stopPropagation()}
-                        onInputCapture = {e => props.leftInput(e.target.value)}
+                        onInputCapture={e => props.leftInput(e.target.value)}
                         value={props.leftFilterField}
 
                         />
@@ -110,7 +110,7 @@ const DragonFlyComponent = _ => ({
                     style={textInputStyles}
                     hintText="Filter dependencies"
                     onClickCapture={e => e.stopPropagation()}
-                    onInputCapture = {e => props.rightInput(e.target.value)}
+                    onInputCapture={e => props.rightInput(e.target.value)}
                     value={props.rightFilterField}
                     />
                 <List className="overflowy">
