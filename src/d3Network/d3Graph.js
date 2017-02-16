@@ -35,8 +35,8 @@ module.exports = (()=> {
     let hashNodes = [],
         hashLinks = [];
     
-    const width = 1000,
-          height = 400;
+    const width = 900,
+          height = 500;
 
     var svg = d3.select("#graph").append("svg")
                 .attr("width", width)

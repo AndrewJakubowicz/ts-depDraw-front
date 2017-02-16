@@ -1,11 +1,9 @@
 
 .CodeMirror {
-    height: 500px;
     width: 100%;
     margin: 0 auto 0 auto;
 }
 
-.flexbox .row.code-box {
-    flex: 0 1 50%;
-    height: 600px;
+.code-box > div {
+    max-height: 100%;
 }

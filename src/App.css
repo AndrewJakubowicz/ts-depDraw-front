@@ -3,13 +3,21 @@
   display: flex;
   flex-flow: column;
   height: 100%;
-}
-
-.flexbox .row.content{
-  flex: 1 1 auto;
+  align-items: center;
+  align-content: center;
 }
 
 .App {
   font-family: 'Roboto', sans-serif;
   background-color: #e2e2e2;
+}
+
+.top-half{
+  flex: 1;
+}
+
+.bottom-half{
+  flex: 1;
+  width: 77%;
+  max-width: 77%;
 }

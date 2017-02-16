@@ -8,12 +8,20 @@ import {hashNodeToString} from '../d3Network/util/hashNode';
 
 import {getFocussedTokenFromState, getFilteredDependencies, getFilteredDependents, getLeftFilterText, getRightFilterText,
     getDragonflyTail} from '../reducers';
+
 import * as actions from '../actions';
 
 import './dragonfly.css'
 
 const textInputStyles = {
     padding: "0 5px 0 5px"
+}
+
+const moduleStyle = {
+    backgroundColor: "#FAFAFA",
+    borderWidth: '2px',
+    borderColor: '#EEEEEE',
+    borderStyle: 'solid'
 }
 
 
@@ -24,6 +32,7 @@ const populateList = (dropDownList, callback, uniqueKey) => {
     return dropDownList.map(v => (
         <ListItem
             key={hashNodeToString(v) + '-ListItem' + uniqueKey}
+            leftIcon={<span style={moduleStyle}>{v.kind[0].toUpperCase()}</span>}
             className="dropdownItem"
             onClick={e => {
                 e.stopPropagation();
@@ -33,7 +42,7 @@ const populateList = (dropDownList, callback, uniqueKey) => {
             <span
                 key={hashNodeToString(v) + '-span' + uniqueKey}
             >
-                {v.kind + ',' + v.displayString + ',' + v.file}
+                {v.displayString + '\n' + v.file}
             </span>
         </ListItem>
     ));
@@ -70,7 +79,7 @@ const DragonFlyComponent = _ => ({
         const attributes = {...(!(props.leftList)) && {style: {display: "none"}}};
         return (<div id="dragonFly">
             <div id="leftBox" {...attributes} >
-                <Paper zDepth={2}>
+                <Paper zDepth={0}>
                     <TextField
                         style={textInputStyles}
                         hintText="Filter dependents"
@@ -88,7 +97,7 @@ const DragonFlyComponent = _ => ({
                 </Paper>
             </div>
             <div id="centreBox">
-                    <Paper zDepth={4}>
+                    <Paper zDepth={0}>
                     <div>
                         <span>{props.centreData.kind}<br /></span>
                         <span>{props.centreData.displayString}</span>
@@ -105,7 +114,7 @@ const DragonFlyComponent = _ => ({
                     </div>
             </div>
             <div id="rightBox">
-                <Paper zDepth={2}>
+                <Paper zDepth={0}>
                 <TextField
                     style={textInputStyles}
                     hintText="Filter dependencies"

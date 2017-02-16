@@ -12,15 +12,17 @@ import {DragonFly} from './components/dragonfly';
 class App extends Component {
   render() {
     return (
-      <div className="App flexbox">
-        <div className="row content"></div>
-        <DragonFly />
+      <div style={{height: '100%'}}>
         <StartModalBox />
-        <Paper style={{width: '90%',
-                      margin: '0 auto 0 auto'}} zDepth={1}>
-        <OpenFileTabs />
-        <CodeDisplayEditor />
-        </Paper>
+        <DragonFly />
+      <div className="App flexbox">
+        <div className="bottom-half">
+          <Paper zDepth={1} style={{height:'100%'}}>
+          <OpenFileTabs />
+          <CodeDisplayEditor />
+          </Paper>
+        </div>
+      </div>
       </div>
     );
   }

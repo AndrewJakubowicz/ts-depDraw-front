@@ -40,7 +40,7 @@ const CodeMapComponent = React.createClass({
     },
     render: function() {
         return (
-        <div className="row code-box"
+        <div className="code-box"
             onClick={e => e.stopPropagation()}>
             <div data-codeMirror={this.myCodeMirror} ref={this.receiveRef}></div>
         </div>)
