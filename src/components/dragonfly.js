@@ -71,9 +71,9 @@ const populateTail = (dropDownList) => {
     let currentOffset = 0;
     return dropDownList.map(v => {
         if (v.isDep) {
-            currentOffset += 5;
+            currentOffset += 10;
         } else {
-            currentOffset -= 5;
+            currentOffset -= 10;
         }
         return (<div
             key={hashNodeToString(v) + '-ListItem' + Math.random()}
@@ -114,10 +114,21 @@ const DragonFlyComponent = _ => ({
             </div>
             <div id="centreBox">
                     <Paper zDepth={0}>
-                    <div>
-                        <span>{props.centreData.kind}<br /></span>
-                        <span>{props.centreData.displayString}</span>
-                    </div>
+                    <List>
+                        <ListItem
+                            key={hashNodeToString(props.centreData) + '-middleToken'}
+                            
+                        >
+                        
+                        <span style={{color: "#263238", textDecoration: "underline"}}>Selected Token<br /></span>
+                        <br />
+                        <span style={{...moduleStyle, display:'inline-block', width: '28px', height:'28px'}}>{props.centreData.kind ? props.centreData.kind[0].toUpperCase() : ""}</span>
+                        <br />
+                        <span>{props.centreData.displayString}<br /></span>
+                        <span style={fileName}>{props.centreData.file}<br /></span>
+                        
+                        </ListItem>
+                    </List>
                     </Paper>
                     <div id="dependency-list">
                         <ul style={{position: "relative"}}
