@@ -3,6 +3,7 @@ import React from 'react';
 import {List, ListItem} from 'material-ui/List';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import {hashNodeToString} from '../d3Network/util/hashNode';
 
@@ -114,10 +115,11 @@ const DragonFlyComponent = _ => ({
             </div>
             <div id="centreBox">
                     <Paper zDepth={0}>
-                    <List>
+                    <List >
                         <ListItem
                             key={hashNodeToString(props.centreData) + '-middleToken'}
-                            
+                            style={{cursor: 'default'}}
+                            disabled={true}
                         >
                         
                         <span style={{color: "#263238", textDecoration: "underline"}}>Selected Token<br /></span>
@@ -128,6 +130,18 @@ const DragonFlyComponent = _ => ({
                         <span style={fileName}>{props.centreData.file}<br /></span>
                         
                         </ListItem>
+                            <RaisedButton label="Commit Tail"
+                                fullWidth={true}
+                                secondary={true}
+                                disabled={!(props.tail && props.tail.length !== 0)}
+                                onTouchTap={props.clickOnTail}
+                                />
+                            <RaisedButton label="Delete Tail"
+                                fullWidth={true}
+                                secondary={true}
+                                disabled={!(props.tail && props.tail.length !== 0)}
+                                onTouchTap={props.clearTail}
+                                />
                     </List>
                     </Paper>
                     <div id="dependency-list">
@@ -188,6 +202,9 @@ const mapDispatchToProps = dispatch => ({
     },
     clickOnTail: () => {
         dispatch(actions.applyD3MutationHistory());
+        dispatch(actions.clearTailHistory());
+    },
+    clearTail: () => {
         dispatch(actions.clearTailHistory());
     }
 });
