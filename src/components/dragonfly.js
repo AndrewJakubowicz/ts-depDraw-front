@@ -33,6 +33,17 @@ const populateList = (dropDownList, callback, uniqueKey) => {
     if (!(dropDownList && dropDownList.length !== 0)){
         return <span></span>
     }
+    // Order list here
+    dropDownList.sort((a, b) => {
+        // Order of importance (m = Module etc...)
+        const importance = 'macfvp'.toUpperCase().split("");
+        const aVal = importance.indexOf(a.kind[0].toUpperCase());
+        const bVal = importance.indexOf(b.kind[0].toUpperCase());
+
+        return (aVal === bVal && 0) || (aVal < bVal && -1) || 1
+        
+    });
+
     return dropDownList.map(v => (
         <ListItem
             key={hashNodeToString(v) + '-ListItem' + uniqueKey}
