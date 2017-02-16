@@ -21,7 +21,8 @@ const moduleStyle = {
     backgroundColor: "#FAFAFA",
     borderWidth: '2px',
     borderColor: '#EEEEEE',
-    borderStyle: 'solid'
+    borderStyle: 'solid',
+    color: '#757575'
 }
 
 const fileName = {
