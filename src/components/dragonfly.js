@@ -24,6 +24,9 @@ const moduleStyle = {
     borderStyle: 'solid'
 }
 
+const fileName = {
+    color: "#B0BEC5"
+}
 
 const populateList = (dropDownList, callback, uniqueKey) => {
     if (!(dropDownList && dropDownList.length !== 0)){
@@ -42,7 +45,8 @@ const populateList = (dropDownList, callback, uniqueKey) => {
             <span
                 key={hashNodeToString(v) + '-span' + uniqueKey}
             >
-                {v.displayString + '\n' + v.file}
+                {v.displayString}<br />
+                <span style={fileName} key={hashNodeToString(v) + '-span2' + uniqueKey}>{v.file}</span>
             </span>
         </ListItem>
     ));
