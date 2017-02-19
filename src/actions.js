@@ -299,3 +299,21 @@ export const updateRightFilter = text => ({
 export const resetFilter = _ => ({
     type: EMPTY_FILTERS
 });
+
+
+
+
+// LOGGING
+
+export const LOGGING_ON = "LOGGING_ON"
+export const LOGGING_OFF = "LOGGING_OFF"
+export const SEND_LOG = "SEND_LOG"
+export const CLEAR_ALL_HISTORY = "CLEAR_ALL_HISTORY"
+
+export const sendLog = _ => ({
+    type: SEND_LOG
+});
+
+export const clearAllHistory = _ => ({
+    type: CLEAR_ALL_HISTORY
+})

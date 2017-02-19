@@ -4,7 +4,8 @@ import { combineEpics } from 'redux-observable';
 import * as actions from './actions';
 
 import {rootD3Epics} from './d3Network/d3GraphEpics';
-import {getTokenTypeURL, postTokenTypeURL, getTokenDependencies, getTokenDependents, getFileText, postTokenDependentsURL} from './d3Network/util/requests';
+import {getTokenTypeURL, postTokenTypeURL, getTokenDependencies, getTokenDependents, getFileText, postTokenDependentsURL, postLoggingInformationURL} from './d3Network/util/requests';
+import {loggingEnabled, getAllHistory, getGUID} from './reducers';
 
 const {ajax} = Rx.Observable;
 
@@ -176,6 +177,21 @@ const populateDragonflyDepntsTokenEpic = actions$ =>
         return Rx.Observable.empty();
     });
 
+const loggingEpic = (actions$, store) =>
+    actions$.ofType(actions.SEND_LOG)
+        .filter(_ => loggingEnabled(store.getState()))
+        .mergeMap(_ => {
+            const history = getAllHistory(store.getState());
+            const userGUID = getGUID(store.getState());
+            store.dispatch(actions.clearAllHistory());
+            return ajax.post(postLoggingInformationURL(userGUID), history, {"Content-Type": "application/json"})
+        })
+        .catch(err => {
+            console.error(`Error in loggingEpic:`, err);
+            return Rx.Observable.empty();
+        });
+
+
 const dragonFlyEpics = combineEpics(
     openDragonflyEpic,
     closeDragonflyEpic,
@@ -191,5 +207,6 @@ export const rootEpic = combineEpics(
     getFileTextEpic,
     getOpenFileText,
     rootD3Epics,
+    loggingEpic,
     dragonFlyEpics
 )

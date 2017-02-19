@@ -218,6 +218,42 @@ const historyD3Reducer = (state = [], action) => {
 
 export const getPlayedD3History = state => state.D3history;
 
+
+const loggingReducer = (state = true, action) => {
+    switch(action.type){
+        case actions.LOGGING_OFF:
+            return false
+        case actions.LOGGING_ON:
+            return true
+        default:
+            return state
+    }
+}
+
+/**
+ * Returns boolean flagging if logging is enabled.
+ */
+export const loggingEnabled = state => state.canILog
+
+const allHistoryReducer = (state = [], action) => {
+    if (action.type === actions.SEND_LOG){
+        return state
+    }
+    if (action.type === actions.CLEAR_ALL_HISTORY){
+        return []
+    }
+    return [...state, action]
+}
+
+export const getAllHistory = state => state.allHistory
+
+const guidReducer = (state = guid(), action) => {
+    return state
+}
+
+export const getGUID = state => state.userGUID;
+
+
 // rootReducer is the base of the store.
 export const rootReducer = combineReducers({
     openFileText: fileTextReducer,
@@ -225,5 +261,22 @@ export const rootReducer = combineReducers({
     linkedTokens: linkedTokenReducer,
     filters: filterStringsReducer,
     unplayedHistory: unplayedNodeHistoryReducer,
-    D3history: historyD3Reducer
+    D3history: historyD3Reducer,
+    canILog: loggingReducer,
+    allHistory: allHistoryReducer,
+    userGUID: guidReducer
 });
+
+
+
+
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
+}

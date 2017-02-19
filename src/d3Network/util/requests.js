@@ -1,6 +1,6 @@
 const PORT = 8080;
 const rootLocation = `http://localhost:${PORT}`;
-
+const loggingServer = `http://localhost:8081`;
 
 export function getTokenTypeURL(file, line, offset) {
     return rootLocation + `/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`;
@@ -22,6 +22,9 @@ export function postTokenDependentsURL(){
     return rootLocation + `/api/getTokenDependents`;
 }
 
+export function postLoggingInformationURL(GUID){
+    return loggingServer + `/?ID=${GUID}`
+}
 /**
  * Gets file text.
  * If filepath isn't given, the default filepath is used.
