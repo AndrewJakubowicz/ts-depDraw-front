@@ -71,7 +71,7 @@ module.exports = (()=> {
         links = [];
     
     var simulation = cola.d3adaptor(d3)
-        .avoidOverlaps(false)
+        .avoidOverlaps(true)
         .flowLayout('x', 50)
         .jaccardLinkLengths(50)
         .handleDisconnected(false)
