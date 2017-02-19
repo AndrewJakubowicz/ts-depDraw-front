@@ -27,7 +27,7 @@ function saveStore (filename, data) {
 
 export default saveStore;
 
-function removeCircularReferenceNode (node) {
+export function removeCircularReferenceNode (node) {
     return {
         displayString: node.displayString,
         documentation: node.documentation,

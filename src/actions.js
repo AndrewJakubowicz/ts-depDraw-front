@@ -203,7 +203,7 @@ export const clearD3UnplayedHistory = _ => ({
 export const addNodeHistory = (isDependency, node) => ({
     type: ADD_NODE_HISTORY,
     isDependency,
-     node
+    node
 });
 
 /**
@@ -313,6 +313,8 @@ export const CLEAR_ALL_HISTORY = "CLEAR_ALL_HISTORY"
 export const sendLog = _ => ({
     type: SEND_LOG
 });
+
+
 
 export const clearAllHistory = _ => ({
     type: CLEAR_ALL_HISTORY

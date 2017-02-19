@@ -67,8 +67,3 @@ window.addEventListener("click", e => {
   store.dispatch(actions.closeDragonfly());
   store.dispatch(actions.resetFilter());
 })
-
-
-setInterval(() => {
-  store.dispatch(actions.sendLog())
-}, 10000)

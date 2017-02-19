@@ -1,13 +1,38 @@
 import {connect} from 'react-redux';
 import React from 'react';
 
-import {INIT_PROGRAM} from '../actions';
+import {INIT_PROGRAM, LOGGING_OFF, LOGGING_ON, sendLog} from '../actions';
+import { loggingEnabled } from '../reducers';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Toggle from 'material-ui/Toggle';
 
 import loadStore from './util/loadStore';
 
+const styles = {
+  block: {
+    maxWidth: 250,
+  },
+  toggle: {
+    marginBottom: 16,
+  },
+  thumbOff: {
+    backgroundColor: '#ffcccc',
+  },
+  trackOff: {
+    backgroundColor: '#ff9d9d',
+  },
+  thumbSwitched: {
+    backgroundColor: 'red',
+  },
+  trackSwitched: {
+    backgroundColor: '#ff9d9d',
+  },
+  labelStyle: {
+    color: 'red',
+  },
+};
 
 
 /**
@@ -61,14 +86,23 @@ class DialogStartModalComponent extends React.Component {
         this.setState({open: true});
     };
 
+    initLogging = function () {
+        // LOGGING every 10 seconds
+        if (this.props.canLog){
+            this.props.startLogging()
+        }
+    }
+
     handleCloseWithLoad = () => {
         this.state.loadActions.map(this.props.dispatchAnAction)
+        this.initLogging();
         this.setState({open: false});
 
     };
 
     handleCloseWithContinue = () => {
         this.setState({open: false})
+        this.initLogging()
         this.props.clickContinue();
     }
 
@@ -88,7 +122,7 @@ class DialogStartModalComponent extends React.Component {
         ];
         return (
             <Dialog
-                title="Welcome to Typescript Dependency Draw!"
+                title="Welcome to Typescript Project Explorer!"
                 actions={actions}
                 modal={true}
                 open={this.state.open}
@@ -100,18 +134,39 @@ class DialogStartModalComponent extends React.Component {
                 <input id="file" type="file" accept="tsDepDraw"
                     onChange={e => this.handleFileChange(e)}
                 />
+                <br />
+                <p>For a better experience, analytics are collected.</p>
+                <Toggle
+                    label="Toggle Analytics collection"
+                    defaultToggled={true}
+                    style={styles.toggle}
+                    onToggle={this.props.handleToggle}
+                    />
             </Dialog>
         )
     }
 }
 
 const mapStateToProps = state => ({
-
+    canLog: loggingEnabled(state)
 });
 
 const mapDispatchToProps = dispatch => ({
     clickContinue: () => dispatch({type: INIT_PROGRAM}),
-    dispatchAnAction: dispatch
+    dispatchAnAction: dispatch,
+    startLogging: () => {
+        dispatch(sendLog())
+        setInterval(function() {
+                dispatch(sendLog());
+        }, 10000)
+    },
+    handleToggle: (_, togglePosition) => {
+        if (togglePosition) {
+            dispatch({type: LOGGING_ON})
+        } else {
+            dispatch({type: LOGGING_OFF})
+        }
+    }
 });
 
 export const StartModalBox = connect(
