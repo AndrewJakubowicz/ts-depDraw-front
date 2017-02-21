@@ -1,6 +1,6 @@
 const PORT = 8080;
 const rootLocation = `http://localhost:${PORT}`;
-const loggingServer = `http://localhost:8081`;
+const loggingServer = `http://130.56.252.69/logger/api`;
 
 export function getTokenTypeURL(file, line, offset) {
     return rootLocation + `/api/getTokenType?filePath=${file}&line=${line}&offset=${offset}`;
