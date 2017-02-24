@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import React from 'react';
 
-import {INIT_PROGRAM, LOGGING_OFF, LOGGING_ON, sendLog} from '../actions';
+import {INIT_PROGRAM, LOGGING_OFF, LOGGING_ON, sendLog, FINISHED_LOGGING} from '../actions';
 import { loggingEnabled } from '../reducers';
 
 import Dialog from 'material-ui/Dialog';
@@ -94,7 +94,10 @@ class DialogStartModalComponent extends React.Component {
     }
 
     handleCloseWithLoad = () => {
-        this.state.loadActions.map(this.props.dispatchAnAction)
+        // Loading actions.
+        this.state.loadActions.map(this.props.dispatchAnAction);
+        // Notify that load is finished.
+        this.props.dispatchAnAction({type: FINISHED_LOGGING});
         this.initLogging();
         this.setState({open: false});
 

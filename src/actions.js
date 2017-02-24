@@ -304,7 +304,7 @@ export const resetFilter = _ => ({
 
 
 // LOGGING
-
+export const FINISHED_LOGGING = "FINISHED_LOGGING"
 export const LOGGING_ON = "LOGGING_ON"
 export const LOGGING_OFF = "LOGGING_OFF"
 export const SEND_LOG = "SEND_LOG"
@@ -313,7 +313,6 @@ export const CLEAR_ALL_HISTORY = "CLEAR_ALL_HISTORY"
 export const sendLog = _ => ({
     type: SEND_LOG
 });
-
 
 
 export const clearAllHistory = _ => ({

@@ -15,8 +15,8 @@
 const prune = (function () {
 	'use strict';
 
-	var DEFAULT_MAX_DEPTH = 6;
-	var DEFAULT_ARRAY_MAX_LENGTH = 50;
+	var DEFAULT_MAX_DEPTH = 5;
+	var DEFAULT_ARRAY_MAX_LENGTH = 1000;
 	var DEFAULT_PRUNED_VALUE = '"-pruned-"';
 	var seen; // Same variable used for all stringifications
 	var iterator; // either forEachEnumerableOwnProperty, forEachEnumerableProperty or forEachProperty
